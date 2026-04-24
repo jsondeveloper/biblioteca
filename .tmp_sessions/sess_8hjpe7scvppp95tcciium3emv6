@@ -1,0 +1,1 @@
+user|a:6:{s:2:"id";i:1;s:8:"username";s:12:"estudiante01";s:8:"password";s:45:"$2y$10$examplehashdummy0000000000000000000000";s:5:"email";s:20:"estudiante01@uni.edu";s:4:"role";s:10:"estudiante";s:10:"created_at";s:19:"2026-04-24 13:46:22";}user_id|i:1;role|s:10:"estudiante";

@@ -1,0 +1,1 @@
+user|a:6:{s:2:"id";i:3;s:8:"username";s:15:"bibliotecario01";s:8:"password";s:60:"$2y$10$zqED4hhl42PjmuI/h/f6e.DycW1Zm0rRznZtp.nxDxl4vAWNtzdbq";s:5:"email";s:23:"bibliotecario01@uni.edu";s:4:"role";s:13:"bibliotecario";s:10:"created_at";s:19:"2026-04-24 14:07:19";}user_id|i:3;role|s:13:"bibliotecario";
