@@ -19,6 +19,12 @@ class Bibliotecario extends Model
         return $stmt->fetch() ?: null;
     }
 
+    public static function findByUsuarioId(int $usuarioId): ?array
+    {
+        $stmt = self::query('SELECT * FROM bibliotecarios WHERE usuario_id = :usuario_id LIMIT 1', ['usuario_id' => $usuarioId]);
+        return $stmt->fetch() ?: null;
+    }
+
     public static function findByTurno(string $turno): array
     {
         return self::query('SELECT * FROM bibliotecarios WHERE turno = :turno ORDER BY nombre', ['turno' => $turno])->fetchAll();

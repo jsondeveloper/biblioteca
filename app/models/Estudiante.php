@@ -19,6 +19,12 @@ class Estudiante extends Model
         return $stmt->fetch() ?: null;
     }
 
+    public static function findByUsuarioId(int $usuarioId): ?array
+    {
+        $stmt = self::query('SELECT * FROM estudiantes WHERE usuario_id = :usuario_id LIMIT 1', ['usuario_id' => $usuarioId]);
+        return $stmt->fetch() ?: null;
+    }
+
     public static function profile(int $id): ?array
     {
         $sql = 'SELECT e.*, u.username, u.email, u.role

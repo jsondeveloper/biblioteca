@@ -25,19 +25,17 @@
                     </span>
                 </a>
 
-                <button class="navbar-toggler app-navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Alternar navegacion">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarMain">
-                    <div class="nav-shell mx-auto">
+               <div class="nav-shell mx-auto">
                         <ul class="navbar-nav nav-links-row">
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= htmlspecialchars(url()) ?>">Inicio</a>
                             </li>
                             <?php if ($isAuth): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="<?= htmlspecialchars(url('libros')) ?>">Catalogo</a>
+                                    <a class="nav-link" href="<?= htmlspecialchars(url('categorias')) ?>">Categorias</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<?= htmlspecialchars(url('libros')) ?>">Libros</a>
                                 </li>
                             <?php endif; ?>
                             <?php if ($isAuth && $role === 'bibliotecario'): ?>
@@ -47,9 +45,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="<?= htmlspecialchars(url('reservas')) ?>">Reservas</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="<?= htmlspecialchars(url('categorias')) ?>">Categorias</a>
-                                </li>
+                                
                             <?php endif; ?>
                             <?php if ($isAuth && $role === 'estudiante'): ?>
                                 <li class="nav-item">
@@ -59,13 +55,18 @@
                         </ul>
                     </div>
 
+                <div class="collapse navbar-collapse" id="navbarMain">
+                    
+
                     <div class="nav-actions ms-lg-auto">
                         <?php if ($isAuth): ?>
+                            
                             <span class="user-pill">
-                                <?= htmlspecialchars(Auth::getUser()['username']) ?>
-                                <span class="badge <?= htmlspecialchars(role_badge_class($role)) ?>"><?= htmlspecialchars((string) $role) ?></span>
+                               <?= htmlspecialchars(Auth::getUserName() ?? Auth::getUser()['username']) ?>                                
                             </span>
-                            <a class="btn btn-outline-light btn-sm nav-action" href="<?= htmlspecialchars(url('logout')) ?>">Cerrar sesion</a>
+                                                     
+                            
+                            <a class="btn" href="<?= htmlspecialchars(url('logout')) ?>">Cerrar sesion</a>
                         <?php else: ?>
                             <a class="nav-link nav-link-plain" href="<?= htmlspecialchars(url('login')) ?>">Login</a>
                             <a class="btn btn-light btn-sm nav-action" href="<?= htmlspecialchars(url('registro')) ?>">Crear cuenta</a>

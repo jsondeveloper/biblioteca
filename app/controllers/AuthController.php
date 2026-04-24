@@ -15,7 +15,18 @@ class AuthController extends BaseController
 
             $user = Usuario::findByUsername($username);
             if ($user && password_verify($password, $user['password'])) {
-                Auth::login($user);
+                $name = null;
+                
+                // Get the name based on the role
+                if ($user['role'] === 'estudiante') {
+                    $estudiante = Estudiante::findByUsuarioId($user['id']);
+                    $name = $estudiante['nombre'] ?? null;
+                } elseif ($user['role'] === 'bibliotecario') {
+                    $bibliotecario = Bibliotecario::findByUsuarioId($user['id']);
+                    $name = $bibliotecario['nombre'] ?? null;
+                }
+                
+                Auth::login($user, $name);
                 redirect_to();
             }
 
@@ -78,7 +89,8 @@ class AuthController extends BaseController
             }
 
             $user = Usuario::find($userId);
-            Auth::login($user);
+            $name = trim($_POST['nombre'] ?? '');
+            Auth::login($user, $name);
             redirect_to();
         }
 

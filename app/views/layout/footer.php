@@ -5,8 +5,8 @@
         <div class="container py-4">
             <div class="footer-card">
                 <div>
-                    <h6>Biblioteca Universitaria</h6>
-                    <p class="mb-0">Gestion de catalogo, prestamos y reservas en una interfaz clara y moderna.</p>
+                    <h4>Biblioteca Universitaria</h4>
+                    <p class="mb-0">Gestion de libros, reservas y prestamos.</p>
                 </div>
                 <div class="footer-meta">
                     <span class="footer-badge">PHP MVC</span>

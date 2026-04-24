@@ -2,22 +2,22 @@
     <div class="hero-card">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
             <div>
-                <span class="eyebrow mb-3">Panel Bibliotecario</span>
-                <h1 class="section-title">Bienvenido, <?= htmlspecialchars($user['username']) ?></h1>
+                
+                <h1 class="section-title">Bienvenido, <?= htmlspecialchars(Auth::getUserName() ?? Auth::getUser()['username']) ?></h1>
                 <p class="section-subtitle">Supervisa el catalogo, controla prestamos activos y ejecuta acciones clave desde un solo lugar.</p>
             </div>
-            <a href="<?= htmlspecialchars(url('libros/crear')) ?>" class="btn btn-primary">Agregar libro</a>
+           
         </div>
     </div>
 </section>
 
-<section class="row g-4 mb-4">
+<section class="row g-4 mb-4" style="display: flex; justify-content: space-between; align-items: center;margin: 1rem 0;">
     <div class="col-md-4">
         <div class="metric-card metric-card--primary">
-            <span class="metric-card__label">Catalogo</span>
+            <span class="metric-card__label">Libros</span>
             <div class="metric-card__value"><?= htmlspecialchars((string) $libros_count) ?></div>
             <p class="text-secondary mb-3">Total de libros registrados en la biblioteca.</p>
-            <a href="<?= htmlspecialchars(url('libros')) ?>" class="btn btn-outline-primary">Ver catalogo</a>
+            <a href="<?= htmlspecialchars(url('libros')) ?>" class="btn btn-outline-primary">Ver libros</a>
         </div>
     </div>
     <div class="col-md-4">
@@ -40,56 +40,32 @@
 
 <section class="row g-4">
     <div class="col-lg-7">
-        <div class="table-card p-4 h-100">
-            <h2 class="h4 mb-3">Acciones rapidas</h2>
+        <div class=" p-4 h-100">
+            
             <div class="vstack gap-3">
-                <a href="<?= htmlspecialchars(url('libros/crear')) ?>" class="quick-link">
+                <a href="<?= htmlspecialchars(url('libros/crear')) ?>" class="quick-link metric-card metric-card--info">
                     <div>
                         <strong>Agregar nuevo libro</strong>
                         <span>Registra ejemplares y define su estado inicial.</span>
                     </div>
-                    <span class="badge badge-soft-success">Nuevo</span>
+                    <span class="badge badge-soft-primary">Libros</span>
                 </a>
-                <a href="<?= htmlspecialchars(url('prestamos/crear')) ?>" class="quick-link">
+                <a href="<?= htmlspecialchars(url('prestamos/crear')) ?>" class="quick-link metric-card metric-card--warning">
                     <div>
                         <strong>Registrar prestamo</strong>
                         <span>Asocia un libro con un estudiante y una fecha de devolucion.</span>
                     </div>
-                    <span class="badge badge-soft-primary">Operacion</span>
+                    <span class="badge badge-soft-primary">Prestamos</span>
                 </a>
-                <a href="<?= htmlspecialchars(url('prestamos')) ?>" class="quick-link">
+                <a href="<?= htmlspecialchars(url('prestamos')) ?>" class="quick-link metric-card metric-card--primary">
                     <div>
                         <strong>Procesar devoluciones</strong>
                         <span>Revisa el estado de cada prestamo y confirma entregas.</span>
                     </div>
-                    <span class="badge badge-soft-warning">Seguimiento</span>
+                    <span class="badge badge-soft-primary">Devoluciones</span>
                 </a>
             </div>
         </div>
     </div>
-    <div class="col-lg-5">
-        <div class="table-card p-4 h-100">
-            <h2 class="h4 mb-3">Resumen del rol</h2>
-            <div class="vstack gap-3">
-                <div class="quick-link">
-                    <div>
-                        <strong>Catalogo visible</strong>
-                        <span>Actualiza disponibilidad, mantenimiento y ediciones.</span>
-                    </div>
-                </div>
-                <div class="quick-link">
-                    <div>
-                        <strong>Control de flujo</strong>
-                        <span>Prestamos y devoluciones con indicadores por color.</span>
-                    </div>
-                </div>
-                <div class="quick-link">
-                    <div>
-                        <strong>Operaciones seguras</strong>
-                        <span>Formularios con validaciones y mensajes claros.</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 </section>

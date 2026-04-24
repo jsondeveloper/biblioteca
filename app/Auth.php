@@ -10,12 +10,13 @@ class Auth
         }
     }
 
-    public static function login(array $user): void
+    public static function login(array $user, ?string $name = null): void
     {
         self::start();
         $_SESSION['user'] = $user;
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role'];
+        $_SESSION['user_name'] = $name;
     }
 
     public static function logout(): void
@@ -24,6 +25,7 @@ class Auth
         unset($_SESSION['user']);
         unset($_SESSION['user_id']);
         unset($_SESSION['role']);
+        unset($_SESSION['user_name']);
         session_destroy();
     }
 
@@ -49,6 +51,12 @@ class Auth
     {
         self::start();
         return $_SESSION['role'] ?? null;
+    }
+
+    public static function getUserName(): ?string
+    {
+        self::start();
+        return $_SESSION['user_name'] ?? null;
     }
 
     public static function hasRole(string $role): bool
