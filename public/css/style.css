@@ -55,6 +55,7 @@ h1, h2, h3, h4, h5, h6,
     display: flex;
     justify-content: space-between;
     padding: 1rem;;
+    align-items: center;
 }
 
 .site-topbar::before,
@@ -239,7 +240,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .hero-card {
-    padding: 2rem;
+    padding: 1rem;
     position: relative;
     overflow: hidden;
 }
@@ -313,6 +314,7 @@ h1, h2, h3, h4, h5, h6,
 .card {
     border: 0;
     box-shadow: var(--shadow-card);
+    border-radius: 0px !important;
 }
 
 .table-card .table {
@@ -349,6 +351,8 @@ h1, h2, h3, h4, h5, h6,
     border: 1px solid rgba(22, 50, 79, 0.14);
     background: rgba(255, 255, 255, 0.95);
     box-shadow: none;
+    border-radius: 0;
+    margin: .5rem;
 }
 
 .form-control:focus,
@@ -489,6 +493,7 @@ h1, h2, h3, h4, h5, h6,
     min-height: 70vh;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .auth-panel {
@@ -496,11 +501,10 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .auth-panel__side {
-    border-radius: var(--radius-xl);
+    
     padding: 2rem;
     background: linear-gradient(160deg, rgba(22, 50, 79, 0.96), rgba(47, 125, 115, 0.92));
     color: white;
-    height: 100%;
     box-shadow: var(--shadow-card);
 }
 

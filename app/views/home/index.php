@@ -7,14 +7,11 @@
                 <p class="lead text-secondary mb-4">
                     Consulta catalogo, administra prestamos, registra reservas y sigue el estado de cada libro desde un panel moderno y organizado.
                 </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a class="btn btn-primary btn-lg" href="<?= htmlspecialchars(url('login')) ?>">Entrar al sistema</a>
-                    <a class="btn btn-outline-secondary btn-lg" href="<?= htmlspecialchars(url('registro')) ?>">Crear cuenta</a>
-                </div>
+                
             </div>
             <div class="col-lg-5">
                 <div class="panel-card p-4">
-                    <h3 class="h4 mb-3">Lo que puedes hacer</h3>
+                    
                     <div class="vstack gap-3">
                         <div class="quick-link">
                             <div>
@@ -44,7 +41,7 @@
     </div>
 </section>
 
-<section class="row g-4">
+<section class="row g-4" style="display: flex; margin-bottom: 2rem;">
     <div class="col-lg-6">
         <div class="metric-card metric-card--primary">
             <span class="metric-card__label">Estudiantes</span>

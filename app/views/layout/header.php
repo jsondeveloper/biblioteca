@@ -27,9 +27,7 @@
 
                <div class="nav-shell mx-auto">
                         <ul class="navbar-nav nav-links-row">
-                            <li class="nav-item">
-                                <a class="nav-link" href="<?= htmlspecialchars(url()) ?>">Inicio</a>
-                            </li>
+                           
                             <?php if ($isAuth): ?>
                                 <li class="nav-item">
                                     <a class="nav-link" href="<?= htmlspecialchars(url('categorias')) ?>">Categorias</a>
@@ -68,8 +66,7 @@
                             
                             <a class="btn" href="<?= htmlspecialchars(url('logout')) ?>">Cerrar sesion</a>
                         <?php else: ?>
-                            <a class="nav-link nav-link-plain" href="<?= htmlspecialchars(url('login')) ?>">Login</a>
-                            <a class="btn btn-light btn-sm nav-action" href="<?= htmlspecialchars(url('registro')) ?>">Crear cuenta</a>
+                            <a class="btn btn-outline-secondary btn-lg" href="<?= htmlspecialchars(url('login')) ?>">Entrar al sistema</a>
                         <?php endif; ?>
                     </div>
                 </div>
