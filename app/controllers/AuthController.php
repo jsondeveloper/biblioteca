@@ -46,18 +46,91 @@ class AuthController extends BaseController
         redirect_to('login');
     }
 
-    public function registro(): void
+    public function registroEstudiante(): void
     {
+        $this->registro('estudiante');
+    }
+
+    public function registroBibliotecario(): void
+    {
+        $this->registro('bibliotecario');
+    }
+
+    public function registro(?string $routeRole = null): void
+    {
+        $role = $routeRole ?? $_GET['role'] ?? $_POST['role'] ?? 'estudiante';
+        if (!in_array($role, ['estudiante', 'bibliotecario'], true)) {
+            $role = 'estudiante';
+        }
+        $fixedRole = false;
+        if ($routeRole !== null || isset($_GET['role'])) {
+            $fixedRole = true;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fixed_role'])) {
+            $fixedRole = true;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = trim($_POST['username'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-            $role = $_POST['role'] ?? 'estudiante';
+            $role = $_POST['role'] ?? $role;
+            if (!in_array($role, ['estudiante', 'bibliotecario'], true)) {
+                $role = 'estudiante';
+            }
 
-            if ($username === '' || $email === '' || $password === '') {
+            $nombre = trim($_POST['nombre'] ?? '');
+            $telefono = trim($_POST['telefono'] ?? '');
+            $matricula = trim($_POST['matricula'] ?? '');
+            $carrera = trim($_POST['carrera'] ?? '');
+            $numeroEmpleado = trim($_POST['numero_empleado'] ?? '');
+
+            if ($username === '' || $email === '' || $password === '' || $nombre === '') {
                 $this->render('auth/registro', [
                     'error' => 'Complete todos los campos obligatorios.',
                     'input' => $_POST,
+                    'role' => $role,
+                    'fixedRole' => $fixedRole,
+                ]);
+                return;
+            }
+
+            if (strlen($username) < 4) {
+                $this->render('auth/registro', [
+                    'error' => 'El nombre de usuario debe tener al menos 4 caracteres.',
+                    'input' => $_POST,
+                    'role' => $role,
+                    'fixedRole' => $fixedRole,
+                ]);
+                return;
+            }
+
+            if (strlen($password) < 6) {
+                $this->render('auth/registro', [
+                    'error' => 'La contrasena debe tener al menos 6 caracteres.',
+                    'input' => $_POST,
+                    'role' => $role,
+                    'fixedRole' => $fixedRole,
+                ]);
+                return;
+            }
+
+            if ($role === 'estudiante' && ($matricula === '' || $carrera === '')) {
+                $this->render('auth/registro', [
+                    'error' => 'Complete matricula y carrera para estudiantes.',
+                    'input' => $_POST,
+                    'role' => $role,
+                    'fixedRole' => $fixedRole,
+                ]);
+                return;
+            }
+
+            if ($role === 'bibliotecario' && $numeroEmpleado === '') {
+                $this->render('auth/registro', [
+                    'error' => 'Complete el numero de empleado para bibliotecarios.',
+                    'input' => $_POST,
+                    'role' => $role,
+                    'fixedRole' => $fixedRole,
                 ]);
                 return;
             }
@@ -72,28 +145,30 @@ class AuthController extends BaseController
             if ($role === 'estudiante') {
                 Estudiante::create([
                     'usuario_id' => $userId,
-                    'matricula' => trim($_POST['matricula'] ?? ''),
-                    'nombre' => trim($_POST['nombre'] ?? ''),
-                    'carrera' => trim($_POST['carrera'] ?? ''),
-                    'telefono' => trim($_POST['telefono'] ?? ''),
+                    'matricula' => $matricula,
+                    'nombre' => $nombre,
+                    'carrera' => $carrera,
+                    'telefono' => $telefono,
                 ]);
             }
 
             if ($role === 'bibliotecario') {
                 Bibliotecario::create([
                     'usuario_id' => $userId,
-                    'numero_empleado' => trim($_POST['numero_empleado'] ?? ''),
-                    'nombre' => trim($_POST['nombre'] ?? ''),
-                    'turno' => trim($_POST['turno'] ?? 'Manana'),
+                    'numero_empleado' => $numeroEmpleado,
+                    'nombre' => $nombre,
                 ]);
             }
 
             $user = Usuario::find($userId);
-            $name = trim($_POST['nombre'] ?? '');
+            $name = $nombre;
             Auth::login($user, $name);
             redirect_to();
         }
 
-        $this->render('auth/registro');
+        $this->render('auth/registro', [
+            'role' => $role,
+            'fixedRole' => $fixedRole,
+        ]);
     }
 }

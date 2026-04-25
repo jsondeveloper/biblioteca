@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS bibliotecarios (
     usuario_id INT NOT NULL UNIQUE,
     numero_empleado VARCHAR(50) NOT NULL UNIQUE,
     nombre VARCHAR(150) NOT NULL,
-    turno ENUM('Manana','Tarde','Noche') NOT NULL DEFAULT 'Manana',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -113,8 +112,8 @@ INSERT INTO estudiantes (usuario_id, matricula, nombre, carrera, telefono) VALUE
 (1, '2026001', 'Ana Gomez', 'Ingenieria en Sistemas', '555-0101'),
 (2, '2026002', 'Diego Fernandez', 'Bibliotecologia', '555-0102');
 
-INSERT INTO bibliotecarios (usuario_id, numero_empleado, nombre, turno) VALUES
-(3, 'BIB1001', 'Carla Mendez', 'Manana');
+INSERT INTO bibliotecarios (usuario_id, numero_empleado, nombre) VALUES
+(3, 'BIB1001', 'Carla Mendez');
 
 INSERT INTO categorias (nombre, descripcion) VALUES
 ('Ciencias', 'Libros de ciencias exactas y naturales'),

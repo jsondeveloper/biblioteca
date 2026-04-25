@@ -10,7 +10,7 @@ class Bibliotecario extends Model
 
     protected static function fillable(): array
     {
-        return ['usuario_id', 'numero_empleado', 'nombre', 'turno'];
+        return ['usuario_id', 'numero_empleado', 'nombre'];
     }
 
     public static function findByNumeroEmpleado(string $numeroEmpleado): ?array
@@ -23,10 +23,5 @@ class Bibliotecario extends Model
     {
         $stmt = self::query('SELECT * FROM bibliotecarios WHERE usuario_id = :usuario_id LIMIT 1', ['usuario_id' => $usuarioId]);
         return $stmt->fetch() ?: null;
-    }
-
-    public static function findByTurno(string $turno): array
-    {
-        return self::query('SELECT * FROM bibliotecarios WHERE turno = :turno ORDER BY nombre', ['turno' => $turno])->fetchAll();
     }
 }

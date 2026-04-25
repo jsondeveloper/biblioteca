@@ -33,7 +33,7 @@
             <span class="metric-card__label">Estudiantes</span>
             <div class="metric-card__value"><?= htmlspecialchars((string) $estudiantes_count) ?></div>
             <p class="text-secondary mb-3">Usuarios con acceso al modulo academico.</p>
-            <a href="<?= htmlspecialchars(url('registro')) ?>" class="btn btn-outline-secondary">Registrar nuevo</a>
+            <a href="<?= htmlspecialchars(url('registro/bibliotecario')) ?>" class="btn btn-outline-secondary">Registrar nuevo</a>
         </div>
     </div>
 </section>

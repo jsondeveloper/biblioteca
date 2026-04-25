@@ -7,8 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QjFVB3n4LzV6e7xkN5dAETXY+kYxYcQzPrm6RhKekeo7UQ/6zEwzxlqIhRklzP5k" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="<?= htmlspecialchars(asset_url('css/style.css')) ?>">
 </head>
 <body>
@@ -66,7 +70,7 @@
                             
                             <a class="btn" href="<?= htmlspecialchars(url('logout')) ?>">Cerrar sesion</a>
                         <?php else: ?>
-                            <a class="btn btn-outline-secondary btn-lg" href="<?= htmlspecialchars(url('login')) ?>">Entrar al sistema</a>
+                            <a class="btn btn-secondary btn-lg" href="<?= htmlspecialchars(url('login')) ?>">Entrar al sistema</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -76,7 +80,7 @@
     </header>
 
     <main class="page-frame">
-        <div class="container py-4 py-lg-5">
+        <div class="container py-3 py-lg-4">
             <?php if (!empty($alerts)): ?>
                 <div class="alerts-stack mb-4">
                     <?php foreach ($alerts as $alert): ?>

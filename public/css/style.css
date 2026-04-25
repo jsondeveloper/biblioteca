@@ -225,7 +225,6 @@ h1, h2, h3, h4, h5, h6,
 
 .page-frame {
     flex: 1;
-    padding: 1rem;
 }
 
 .hero-card,
@@ -373,7 +372,7 @@ h1, h2, h3, h4, h5, h6,
     text-decoration: none;
     color: #fff;
     background: rgba(22, 50, 79, 0.97);
-    font-size: .8rem;
+    font-size: 1rem;
 }
 
 .btn-primary {
@@ -483,8 +482,6 @@ h1, h2, h3, h4, h5, h6,
     display: inline-flex;
     align-items: center;
     padding: 0.45rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
     font-size: 0.82rem;
     font-weight: 700;
 }
@@ -502,7 +499,7 @@ h1, h2, h3, h4, h5, h6,
 
 .auth-panel__side {
     
-    padding: 2rem;
+    padding: 4.7rem;
     background: linear-gradient(160deg, rgba(22, 50, 79, 0.96), rgba(47, 125, 115, 0.92));
     color: white;
     box-shadow: var(--shadow-card);

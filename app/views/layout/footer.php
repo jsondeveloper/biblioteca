@@ -2,10 +2,12 @@
     </main>
 
     <footer class="site-footer">
-        <div class="container py-4">
+        
             <div class="footer-card">
+                <div style="display: flex;
+    justify-content: space-between;" class="container">
                 <div>
-                    <h4>Biblioteca Universitaria</h4>
+                    <h5>Biblioteca Universitaria</h5>
                     <p class="mb-0">Gestion de libros, reservas y prestamos.</p>
                 </div>
                 <div class="footer-meta">

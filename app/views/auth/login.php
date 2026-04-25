@@ -15,7 +15,7 @@
         <div class="col-lg-5">
             <div class="card auth-panel border-0 shadow-sm">
                 <div class="card-body p-lg-4">
-                    <h2 style="text-align: center; margin: .8rem;" class="h3 mb-3">Iniciar sesión</h2>
+                    <h3 style="text-align: center; margin: .8rem;" class="h3 mb-3">Iniciar sesión</h3>
                     
                     <?php if (!empty($error)): ?>
                         <div class="alert alert-danger border-0 shadow-sm"><?= htmlspecialchars($error) ?></div>
