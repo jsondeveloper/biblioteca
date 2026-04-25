@@ -46,16 +46,6 @@ class AuthController extends BaseController
         redirect_to('login');
     }
 
-    public function registroEstudiante(): void
-    {
-        $this->registro('estudiante');
-    }
-
-    public function registroBibliotecario(): void
-    {
-        $this->registro('bibliotecario');
-    }
-
     public function registro(?string $routeRole = null): void
     {
         $role = $routeRole ?? $_GET['role'] ?? $_POST['role'] ?? 'estudiante';
