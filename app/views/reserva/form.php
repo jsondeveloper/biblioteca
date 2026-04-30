@@ -14,7 +14,7 @@
                 <select name="libro_id" class="form-select form-select-lg" required>
                     <option value="">Selecciona un libro</option>
                     <?php foreach ($libros as $libro): ?>
-                        <option value="<?= $libro['id'] ?>"><?= htmlspecialchars($libro['titulo']) ?></option>
+                        <option value="<?= $libro['id'] ?>" <?= isset($selectedBookId) && $selectedBookId === (int) $libro['id'] ? 'selected' : '' ?>><?= htmlspecialchars($libro['titulo']) ?></option>
                     <?php endforeach; ?>
                 </select>
                 <div class="invalid-feedback">Selecciona un libro para la reserva.</div>

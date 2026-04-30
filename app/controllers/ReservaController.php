@@ -22,6 +22,7 @@ class ReservaController extends BaseController
             redirect_to('reservas?success=Reserva registrada correctamente. Expira en 24 horas.');
         }
 
+        $selectedBookId = isset($_GET['libro_id']) ? (int) $_GET['libro_id'] : null;
         $libros = self::query('SELECT id, titulo, estado FROM libros WHERE estado = :estado ORDER BY titulo', ['estado' => 'Disponible'])->fetchAll();
         $estudianteActual = self::query(
             'SELECT id, nombre FROM estudiantes WHERE usuario_id = ? LIMIT 1',
@@ -32,6 +33,7 @@ class ReservaController extends BaseController
             'title' => 'Reservar libro',
             'libros' => $libros,
             'estudianteActual' => $estudianteActual,
+            'selectedBookId' => $selectedBookId,
         ]);
     }
 
