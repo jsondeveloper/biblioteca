@@ -76,6 +76,9 @@ class PrestamoController extends BaseController
     {
         Auth::requireAuth(['bibliotecario', 'estudiante']);
 
+        // Cancelar reservas expiradas automáticamente
+        Reserva::cancelExpiredReservations();
+
         $mensaje = null;
         $tipo = null;
 
@@ -87,7 +90,10 @@ class PrestamoController extends BaseController
             $tipo = 'error';
         }
 
-        if (Auth::hasRole('bibliotecario')) {
+        $isBibliotecario = Auth::hasRole('bibliotecario');
+
+        if ($isBibliotecario) {
+            $prestamosActivos = Prestamo::activeLoans();
             $historial = Prestamo::fullHistory();
         } else {
             $estudianteId = $this->query(
@@ -96,17 +102,21 @@ class PrestamoController extends BaseController
             )->fetch()['id'] ?? null;
 
             if ($estudianteId) {
+                $prestamosActivos = Prestamo::activeLoansByStudent((int) $estudianteId);
                 $historial = Prestamo::historyByStudent((int) $estudianteId);
             } else {
+                $prestamosActivos = [];
                 $historial = [];
             }
         }
 
         $this->render('prestamo/historial', [
-            'title' => 'Historial de prestamos',
+            'title' => 'Prestamos y historial',
+            'prestamosActivos' => $prestamosActivos,
             'historial' => $historial,
             'mensaje' => $mensaje,
             'tipo' => $tipo,
+            'isBibliotecario' => $isBibliotecario,
         ]);
     }
 }

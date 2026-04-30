@@ -156,6 +156,19 @@ class Prestamo extends Model
         return self::query($sql, ['estado' => 'Activo'])->fetchAll();
     }
 
+    public static function activeLoansByStudent(int $estudianteId): array
+    {
+        $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario
+                FROM prestamos p
+                JOIN libros l ON p.libro_id = l.id
+                JOIN estudiantes e ON p.estudiante_id = e.id
+                JOIN bibliotecarios b ON p.bibliotecario_id = b.id
+                WHERE p.estado = :estado AND p.estudiante_id = :estudiante_id
+                ORDER BY p.fecha_prestamo DESC';
+
+        return self::query($sql, ['estado' => 'Activo', 'estudiante_id' => $estudianteId])->fetchAll();
+    }
+
     public static function fullHistory(): array
     {
         $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario

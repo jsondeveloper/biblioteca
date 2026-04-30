@@ -51,8 +51,8 @@ Si tu MySQL usa otra clave, actualiza ese archivo antes de abrir el sistema.
 - Login: `/login` o `/public/login`
 - Registro: `/registro` o `/public/registro`
 - Libros: `/libros` o `/public/libros`
-- Prestamos: `/prestamos` o `/public/prestamos`
-- Reservas: `/reservas` o `/public/reservas`
+- Prestamos: `/prestamos` o `/public/prestamos` (incluye activos e historial)
+- Reservas: `/reservas` o `/public/reservas` (incluye activas e historial)
 
 ## Verificacion rapida
 

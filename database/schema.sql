@@ -120,7 +120,7 @@ INSERT INTO categorias (nombre, descripcion) VALUES
 INSERT INTO libros (titulo, isbn, autor, categoria_id, estado, anio_publicacion, descripcion) VALUES
 ('Fundamentos de Programacion', '978-1234567890', 'Jorge Perez', 3, 'Disponible', 2021, 'Libro base para aprender programacion.'),
 ('Estructuras de Datos', '978-0987654321', 'Maria Ruiz', 3, 'Prestado', 2022, 'Guia practica de estructuras de datos.'),
-('Cien anos de soledad', '978-0307474728', 'Gabriel Garcia Marquez', 2, 'Reservado', 1967, 'Clasico de la literatura latinoamericana.'),
+('Cien años de soledad', '978-0307474728', 'Gabriel Garcia Marquez', 2, 'Reservado', 1967, 'Clasico de la literatura latinoamericana.'),
 ('Biologia Celular', '978-1111111111', 'Ana Lopez', 1, 'Mantenimiento', 2019, 'Introduccion a la biologia celular.');
 
 INSERT INTO prestamos (libro_id, estudiante_id, bibliotecario_id, fecha_prestamo, fecha_devolucion, fecha_entrega, estado, observaciones) VALUES

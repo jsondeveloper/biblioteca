@@ -6,7 +6,7 @@
                 <h1 class="section-title">Hola, <?= htmlspecialchars(Auth::getUserName() ?? Auth::getUser()['username']) ?></h1>
                 <p class="section-subtitle">Consulta tus movimientos activos, revisa fechas de devolucion y encuentra nuevas lecturas desde una sola vista.</p>
             </div>
-            <a href="<?= htmlspecialchars(url('libros')) ?>" class="btn btn-primary">Explorar catalogo</a>
+            <a href="<?= htmlspecialchars(url('libros')) ?>" class="btn btn-primary">Reservar Libro</a>
         </div>
     </div>
 </section>

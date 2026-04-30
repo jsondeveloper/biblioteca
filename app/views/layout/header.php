@@ -56,6 +56,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="<?= htmlspecialchars(url('reservas')) ?>">Reservas</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<?= htmlspecialchars(url('prestamos')) ?>">Prestamos</a>
+                                </li>
                             <?php endif; ?>
                         </ul>
                     </div>

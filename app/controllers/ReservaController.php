@@ -13,12 +13,13 @@ class ReservaController extends BaseController
                 'SELECT id FROM estudiantes WHERE usuario_id = ? LIMIT 1',
                 [Auth::getUserId()]
             )->fetch()['id'] ?? 0);
-            $fechaExpiracion = trim($_POST['fecha_expiracion'] ?? '');
+            // Fecha de expiración automática: 24 horas después
+            $fechaExpiracion = date('Y-m-d H:i:s', strtotime('+1 day'));
 
             Reserva::reserveBook($libroId, $estudianteId, $fechaExpiracion);
             Libro::reserve($libroId);
 
-            redirect_to('reservas?success=Reserva registrada correctamente.');
+            redirect_to('reservas?success=Reserva registrada correctamente. Expira en 24 horas.');
         }
 
         $libros = self::query('SELECT id, titulo, estado FROM libros WHERE estado = :estado ORDER BY titulo', ['estado' => 'Disponible'])->fetchAll();
@@ -77,18 +78,44 @@ class ReservaController extends BaseController
     {
         Auth::requireAuth(['estudiante', 'bibliotecario']);
 
-        $reservas = self::query(
-            'SELECT r.*, l.titulo AS libro, e.nombre AS estudiante
-             FROM reservas r
-             JOIN libros l ON r.libro_id = l.id
-             JOIN estudiantes e ON r.estudiante_id = e.id
-             ORDER BY r.fecha_reserva DESC'
-        )->fetchAll();
+        // Cancelar reservas expiradas automáticamente
+        Reserva::cancelExpiredReservations();
+
+        $isBibliotecario = Auth::hasRole('bibliotecario');
+        if ($isBibliotecario) {
+            $reservasActivas = self::query(
+                'SELECT r.*, l.titulo AS libro, e.nombre AS estudiante
+                 FROM reservas r
+                 JOIN libros l ON r.libro_id = l.id
+                 JOIN estudiantes e ON r.estudiante_id = e.id
+                 WHERE r.estado = :estado
+                 ORDER BY r.fecha_reserva DESC',
+                ['estado' => 'Activa']
+            )->fetchAll();
+            $historial = Reserva::fullHistory();
+        } else {
+            $estudianteId = (int) ($this->query(
+                'SELECT id FROM estudiantes WHERE usuario_id = ? LIMIT 1',
+                [Auth::getUserId()]
+            )->fetch()['id'] ?? 0);
+
+            $reservasActivas = self::query(
+                'SELECT r.*, l.titulo AS libro, e.nombre AS estudiante
+                 FROM reservas r
+                 JOIN libros l ON r.libro_id = l.id
+                 JOIN estudiantes e ON r.estudiante_id = e.id
+                 WHERE r.estudiante_id = :estudiante_id AND r.estado = :estado
+                 ORDER BY r.fecha_reserva DESC',
+                ['estudiante_id' => $estudianteId, 'estado' => 'Activa']
+            )->fetchAll();
+            $historial = Reserva::historyByStudent($estudianteId);
+        }
 
         $this->render('reserva/index', [
-            'title' => 'Reservas activas',
-            'reservas' => $reservas,
-            'isBibliotecario' => Auth::hasRole('bibliotecario'),
+            'title' => 'Reservas y historial',
+            'reservasActivas' => $reservasActivas,
+            'historial' => $historial,
+            'isBibliotecario' => $isBibliotecario,
         ]);
     }
 }

@@ -22,7 +22,7 @@
     <form method="get" action="<?= htmlspecialchars(url('libros/buscar')) ?>" class="row g-3 align-items-end">
         <div class="col-lg-9">
             <label class="form-label">Buscar por titulo, autor o ISBN</label>
-            <input type="text" class="form-control form-control-lg" name="q" value="<?= htmlspecialchars($term ?? '') ?>" placeholder="Ej. Cien anos de soledad o 978-1234567890">
+            <input type="text" class="form-control form-control-lg" name="q" value="<?= htmlspecialchars($term ?? '') ?>" placeholder="Ej. Cien años de soledad o 978-1234567890">
         </div>
         <div class="col-lg-3 d-grid">
             <button type="submit" class="btn btn-primary btn-lg">
