@@ -23,56 +23,36 @@
                     <form method="post" action="<?= htmlspecialchars(url('registro')) ?>" class="needs-validation" novalidate>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Usuario</label>
-                                <input type="text" name="username" value="<?= htmlspecialchars($input['username'] ?? '') ?>" class="form-control" required minlength="4">
+                               
+                                <input placeholder="Usuario" type="text" name="username" value="<?= htmlspecialchars($input['username'] ?? '') ?>" class="form-control" required minlength="4">
                                 <div class="invalid-feedback">El usuario debe tener al menos 4 caracteres.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input type="email" name="email" value="<?= htmlspecialchars($input['email'] ?? '') ?>" class="form-control" required>
+                                
+                                <input placeholder="Email" type="email" name="email" value="<?= htmlspecialchars($input['email'] ?? '') ?>" class="form-control" required>
                                 <div class="invalid-feedback">Ingresa un correo valido.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Contrasena</label>
-                                <input type="password" name="password" class="form-control" required minlength="6">
+                                
+                                <input placeholder="Contraseña" type="password" name="password" class="form-control" required minlength="6">
                                 <div class="invalid-feedback">La contrasena debe tener al menos 6 caracteres.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Rol</label>
                                 <select name="role" class="form-select" required>
-                                    <option value="estudiante">Estudiante</option>
-                                    <option value="bibliotecario">Bibliotecario</option>
+                                    <option value="" disabled <?= empty($input['role']) ? 'selected' : '' ?>>Selecciona tu rol</option>
+                                    <option value="estudiante" <?= (isset($input['role']) && $input['role'] === 'estudiante') ? 'selected' : '' ?>>Estudiante</option>
+                                    <option value="bibliotecario" <?= (isset($input['role']) && $input['role'] === 'bibliotecario') ? 'selected' : '' ?>>Bibliotecario</option>
                                 </select>
+                                <div class="invalid-feedback">Selecciona un rol para tu cuenta.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Nombre completo</label>
-                                <input type="text" name="nombre" value="<?= htmlspecialchars($input['nombre'] ?? '') ?>" class="form-control" required>
+                                <input placeholder="Nombre completo" type="text" name="nombre" value="<?= htmlspecialchars($input['nombre'] ?? '') ?>" class="form-control" required>
                                 <div class="invalid-feedback">Ingresa el nombre completo.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Telefono</label>
-                                <input type="text" name="telefono" value="<?= htmlspecialchars($input['telefono'] ?? '') ?>" class="form-control" placeholder="Ej. 555-0101">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Matricula</label>
-                                <input type="text" name="matricula" value="<?= htmlspecialchars($input['matricula'] ?? '') ?>" class="form-control" placeholder="Solo para estudiantes">
-                                <div class="form-hint">Usalo cuando registres un estudiante.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Carrera</label>
-                                <input type="text" name="carrera" value="<?= htmlspecialchars($input['carrera'] ?? '') ?>" class="form-control" placeholder="Solo para estudiantes">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Numero de empleado</label>
-                                <input type="text" name="numero_empleado" value="<?= htmlspecialchars($input['numero_empleado'] ?? '') ?>" class="form-control" placeholder="Solo para bibliotecarios">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Turno</label>
-                                <select name="turno" class="form-select">
-                                    <option value="Manana">Manana</option>
-                                    <option value="Tarde">Tarde</option>
-                                    <option value="Noche">Noche</option>
-                                </select>
+                               
+                                <input placeholder="Telefono"  required type="text" name="telefono" value="<?= htmlspecialchars($input['telefono'] ?? '') ?>" class="form-control" placeholder="Ej. 555-0101">
+                                <div class="invalid-feedback">Ingresa un numero de telefono valido.</div>
                             </div>
                         </div>
                         <div class="d-flex flex-wrap gap-3 mt-4">

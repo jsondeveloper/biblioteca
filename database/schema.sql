@@ -14,9 +14,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS estudiantes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL UNIQUE,
-    matricula VARCHAR(50) NOT NULL UNIQUE,
     nombre VARCHAR(150) NOT NULL,
-    carrera VARCHAR(120) NOT NULL,
     telefono VARCHAR(30) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
@@ -25,7 +23,6 @@ CREATE TABLE IF NOT EXISTS estudiantes (
 CREATE TABLE IF NOT EXISTS bibliotecarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL UNIQUE,
-    numero_empleado VARCHAR(50) NOT NULL UNIQUE,
     nombre VARCHAR(150) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
@@ -108,12 +105,12 @@ INSERT INTO usuarios (username, password, email, role) VALUES
 ('estudiante02', '$2y$10$kX58rZHtRbAj2q39UN.kLe91B1I2WAhQzUlO6qhGrT4o3yCCPQTCW', 'estudiante02@uni.edu', 'estudiante'),
 ('bibliotecario01', '$2y$10$zqED4hhl42PjmuI/h/f6e.DycW1Zm0rRznZtp.nxDxl4vAWNtzdbq', 'bibliotecario01@uni.edu', 'bibliotecario');
 
-INSERT INTO estudiantes (usuario_id, matricula, nombre, carrera, telefono) VALUES
-(1, '2026001', 'Ana Gomez', 'Ingenieria en Sistemas', '555-0101'),
-(2, '2026002', 'Diego Fernandez', 'Bibliotecologia', '555-0102');
+INSERT INTO estudiantes (usuario_id, nombre, telefono) VALUES
+(1, 'Ana Gomez', '555-0101'),
+(2, 'Diego Fernandez', '555-0102');
 
-INSERT INTO bibliotecarios (usuario_id, numero_empleado, nombre) VALUES
-(3, 'BIB1001', 'Carla Mendez');
+INSERT INTO bibliotecarios (usuario_id, nombre) VALUES
+(3, 'Carla Mendez');
 
 INSERT INTO categorias (nombre, descripcion) VALUES
 ('Ciencias', 'Libros de ciencias exactas y naturales'),

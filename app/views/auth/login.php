@@ -1,6 +1,6 @@
 <section class="auth-shell">
     <div class="row g-4 w-100 align-items-stretch">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="auth-panel__side">
                 <span class="eyebrow mb-3 bg-white text-dark">Acceso Seguro</span>
                 <h2 class="mb-3">Bienvenido de nuevo</h2>
@@ -12,7 +12,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-lg-7">
+        <div class="col-lg-6">
             <div class="card auth-panel border-0 shadow-sm">
                 <div class="card-body p-lg-4">
                     <h1 class="h2 mb-2">Iniciar sesion</h1>
@@ -23,13 +23,13 @@
                     <form method="post" action="<?= htmlspecialchars(url('login')) ?>" class="needs-validation" novalidate>
                         <div class="row g-3">
                             <div class="col-12">
-                                <label class="form-label">Usuario</label>
-                                <input type="text" name="username" value="<?= htmlspecialchars($username ?? '') ?>" class="form-control form-control-lg" required>
+                                
+                                <input placeholder="Usuario" type="text" name="username" value="<?= htmlspecialchars($username ?? '') ?>" class="form-control form-control-lg" required>
                                 <div class="invalid-feedback">Ingresa tu nombre de usuario.</div>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Contrasena</label>
-                                <input type="password" name="password" class="form-control form-control-lg" required minlength="6">
+                                
+                                <input placeholder="Contraseña" type="password" name="password" class="form-control form-control-lg" required minlength="6">
                                 <div class="invalid-feedback">Ingresa una contrasena valida.</div>
                             </div>
                         </div>

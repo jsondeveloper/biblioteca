@@ -346,12 +346,12 @@ h1, h2, h3, h4, h5, h6,
 
 .form-control,
 .form-select {
-    padding: 0.85rem 1rem;
+    
     border: 1px solid rgba(22, 50, 79, 0.14);
     background: rgba(255, 255, 255, 0.95);
     box-shadow: none;
     border-radius: 0;
-    margin: .5rem;
+    margin: .3rem;
 }
 
 .form-control:focus,

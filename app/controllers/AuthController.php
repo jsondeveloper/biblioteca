@@ -71,9 +71,6 @@ class AuthController extends BaseController
 
             $nombre = trim($_POST['nombre'] ?? '');
             $telefono = trim($_POST['telefono'] ?? '');
-            $matricula = trim($_POST['matricula'] ?? '');
-            $carrera = trim($_POST['carrera'] ?? '');
-            $numeroEmpleado = trim($_POST['numero_empleado'] ?? '');
 
             if ($username === '' || $email === '' || $password === '' || $nombre === '') {
                 $this->render('auth/registro', [
@@ -105,26 +102,6 @@ class AuthController extends BaseController
                 return;
             }
 
-            if ($role === 'estudiante' && ($matricula === '' || $carrera === '')) {
-                $this->render('auth/registro', [
-                    'error' => 'Complete matricula y carrera para estudiantes.',
-                    'input' => $_POST,
-                    'role' => $role,
-                    'fixedRole' => $fixedRole,
-                ]);
-                return;
-            }
-
-            if ($role === 'bibliotecario' && $numeroEmpleado === '') {
-                $this->render('auth/registro', [
-                    'error' => 'Complete el numero de empleado para bibliotecarios.',
-                    'input' => $_POST,
-                    'role' => $role,
-                    'fixedRole' => $fixedRole,
-                ]);
-                return;
-            }
-
             $userId = Usuario::create([
                 'username' => $username,
                 'password' => password_hash($password, PASSWORD_DEFAULT),
@@ -135,9 +112,7 @@ class AuthController extends BaseController
             if ($role === 'estudiante') {
                 Estudiante::create([
                     'usuario_id' => $userId,
-                    'matricula' => $matricula,
                     'nombre' => $nombre,
-                    'carrera' => $carrera,
                     'telefono' => $telefono,
                 ]);
             }
@@ -145,7 +120,6 @@ class AuthController extends BaseController
             if ($role === 'bibliotecario') {
                 Bibliotecario::create([
                     'usuario_id' => $userId,
-                    'numero_empleado' => $numeroEmpleado,
                     'nombre' => $nombre,
                 ]);
             }

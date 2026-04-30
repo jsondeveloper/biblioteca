@@ -10,13 +10,7 @@ class Estudiante extends Model
 
     protected static function fillable(): array
     {
-        return ['usuario_id', 'matricula', 'nombre', 'carrera', 'telefono'];
-    }
-
-    public static function findByMatricula(string $matricula): ?array
-    {
-        $stmt = self::query('SELECT * FROM estudiantes WHERE matricula = :matricula LIMIT 1', ['matricula' => $matricula]);
-        return $stmt->fetch() ?: null;
+        return ['usuario_id', 'nombre', 'telefono'];
     }
 
     public static function findByUsuarioId(int $usuarioId): ?array
@@ -34,10 +28,5 @@ class Estudiante extends Model
 
         $stmt = self::query($sql, ['id' => $id]);
         return $stmt->fetch() ?: null;
-    }
-
-    public static function searchByCarrera(string $carrera): array
-    {
-        return self::query('SELECT * FROM estudiantes WHERE carrera = :carrera ORDER BY nombre', ['carrera' => $carrera])->fetchAll();
     }
 }

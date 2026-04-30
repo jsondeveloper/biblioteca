@@ -10,13 +10,7 @@ class Bibliotecario extends Model
 
     protected static function fillable(): array
     {
-        return ['usuario_id', 'numero_empleado', 'nombre'];
-    }
-
-    public static function findByNumeroEmpleado(string $numeroEmpleado): ?array
-    {
-        $stmt = self::query('SELECT * FROM bibliotecarios WHERE numero_empleado = :numero_empleado LIMIT 1', ['numero_empleado' => $numeroEmpleado]);
-        return $stmt->fetch() ?: null;
+        return ['usuario_id', 'nombre'];
     }
 
     public static function findByUsuarioId(int $usuarioId): ?array
