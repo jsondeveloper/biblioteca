@@ -13,6 +13,13 @@ class ReservaController extends BaseController
                 'SELECT id FROM estudiantes WHERE usuario_id = ? LIMIT 1',
                 [Auth::getUserId()]
             )->fetch()['id'] ?? 0);
+
+            Sancion::deactivateExpired();
+
+            if (Sancion::hasActiveSanction($estudianteId)) {
+                redirect_to('reservas?error=' . urlencode('No puedes reservar porque el estudiante tiene sanciones activas.'));
+            }
+
             // Fecha de expiración automática: 24 horas después
             $fechaExpiracion = date('Y-m-d H:i:s', strtotime('+1 day'));
 
@@ -23,17 +30,26 @@ class ReservaController extends BaseController
         }
 
         $selectedBookId = isset($_GET['libro_id']) ? (int) $_GET['libro_id'] : null;
+        $estudianteId = (int) ($this->query(
+            'SELECT id FROM estudiantes WHERE usuario_id = ? LIMIT 1',
+            [Auth::getUserId()]
+        )->fetch()['id'] ?? 0);
+
         $libros = self::query('SELECT id, titulo, estado FROM libros WHERE estado = :estado ORDER BY titulo', ['estado' => 'Disponible'])->fetchAll();
         $estudianteActual = self::query(
             'SELECT id, nombre FROM estudiantes WHERE usuario_id = ? LIMIT 1',
             [Auth::getUserId()]
         )->fetch();
 
+        Sancion::deactivateExpired();
+        $tieneSancionActiva = Sancion::hasActiveSanction($estudianteId);
+
         $this->render('reserva/form', [
             'title' => 'Reservar libro',
             'libros' => $libros,
             'estudianteActual' => $estudianteActual,
             'selectedBookId' => $selectedBookId,
+            'tieneSancionActiva' => $tieneSancionActiva,
         ]);
     }
 
@@ -51,8 +67,9 @@ class ReservaController extends BaseController
             [$usuarioId]
         )->fetch()['id'] ?? 0);
         $fechaDevolucion = trim($_POST['fecha_devolucion'] ?? '');
+        $comentarios = trim($_POST['comentarios'] ?? '');
 
-        $resultado = Prestamo::lendFromReservation((int) $id, $bibliotecarioId, $fechaDevolucion, $usuarioId);
+        $resultado = Prestamo::lendFromReservation((int) $id, $bibliotecarioId, $fechaDevolucion, $usuarioId, $comentarios);
 
         if ($resultado['success']) {
             redirect_to('reservas?success=Reserva aprobada y convertida en prestamo.');

@@ -25,6 +25,8 @@ class HomeController extends BaseController
                 $data['estudiantes_count'] = count(Estudiante::all());
                 $this->render('home/bibliotecario', $data);
             } else {
+                Sancion::deactivateExpired();
+
                 $data['mis_prestamos'] = $this->query(
                     'SELECT p.*, l.titulo, b.nombre as bibliotecario FROM prestamos p 
                      JOIN libros l ON p.libro_id = l.id 
@@ -38,6 +40,13 @@ class HomeController extends BaseController
                      JOIN libros l ON r.libro_id = l.id 
                      WHERE r.estudiante_id = (SELECT id FROM estudiantes WHERE usuario_id = ?) AND r.estado = ?',
                     [$userId, 'Activa']
+                )->fetchAll();
+
+                $data['mis_sanciones'] = $this->query(
+                    'SELECT * FROM sanciones 
+                     WHERE estudiante_id = (SELECT id FROM estudiantes WHERE usuario_id = ?) AND activa = true
+                     ORDER BY fecha_fin DESC',
+                    [$userId]
                 )->fetchAll();
                 
                 $this->render('home/estudiante', $data);

@@ -55,18 +55,12 @@
                                 </td>
                                 <td><span class="badge <?= htmlspecialchars(status_badge_class($reserva['estado'])) ?>"><?= htmlspecialchars($reserva['estado']) ?></span></td>
                                 <td class="text-end">
-                                    <?php if (($isBibliotecario ?? false) && $reserva['estado'] === 'Activa'): ?>
-                                        <form method="post" action="<?= htmlspecialchars(url('reservas/aprobar/' . $reserva['id'])) ?>" class="d-inline-flex align-items-center gap-2 flex-wrap justify-content-end">
-                                            <input type="date" name="fecha_devolucion" class="form-control form-control-sm" required style="min-width: 170px;">
-                                            <button type="submit" class="btn btn-sm btn-outline-success">Aprobar y prestar</button>
-                                        </form>
-                                        <form method="post" action="<?= htmlspecialchars(url('reservas/cancelar/' . $reserva['id'])) ?>" class="d-inline-block ms-2">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancelar</button>
-                                        </form>
-                                    <?php elseif ($reserva['estado'] === 'Activa'): ?>
-                                        <form method="post" action="<?= htmlspecialchars(url('reservas/cancelar/' . $reserva['id'])) ?>" class="d-inline-block">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancelar</button>
-                                        </form>
+                                    <?php if ($reserva['estado'] === 'Activa'): ?>
+                                        <?php if ($isBibliotecario ?? false): ?>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#reservaModal<?= $reserva['id'] ?>">Gestionar</button>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#reservaModal<?= $reserva['id'] ?>">Cancelar</button>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <span class="text-secondary small">Sin acciones</span>
                                     <?php endif; ?>
@@ -80,7 +74,94 @@
     </div>
 </section>
 
-<!-- Historial Completo -->
+<?php if (!empty($reservasActivas ?? [])): ?>
+    <?php foreach ($reservasActivas as $reserva): ?>
+    <!-- Modal para gestionar reserva -->
+    <div class="modal fade" id="reservaModal<?= $reserva['id'] ?>" tabindex="-1" aria-labelledby="reservaModalLabel<?= $reserva['id'] ?>" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title" id="reservaModalLabel<?= $reserva['id'] ?>">Gestionar Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Información de la Reserva -->
+                    <div class="mb-4">
+                        <h6 class="text-uppercase text-secondary small fw-bold mb-3">Detalles de la Reserva</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <small class="text-secondary d-block mb-1">Libro</small>
+                                        <strong><?= htmlspecialchars($reserva['libro']) ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <small class="text-secondary d-block mb-1">Estudiante</small>
+                                        <strong><?= htmlspecialchars($reserva['estudiante']) ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <small class="text-secondary d-block mb-1">Fecha de Reserva</small>
+                                        <strong><?= htmlspecialchars($reserva['fecha_reserva']) ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 bg-light">
+                                    <div class="card-body">
+                                        <small class="text-secondary d-block mb-1">Expira</small>
+                                        <strong><?= htmlspecialchars($reserva['fecha_expiracion']) ?></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if ($isBibliotecario ?? false): ?>
+                    <hr>
+
+                    <!-- Formulario para Aprobar -->
+                    <div class="mb-4">
+                        <h6 class="text-uppercase text-secondary small fw-bold mb-3">Aprobar Reserva y Crear Préstamo</h6>
+                        <form method="post" action="<?= htmlspecialchars(url('reservas/aprobar/' . $reserva['id'])) ?>" id="aprobarForm<?= $reserva['id'] ?>">
+                            <div class="mb-3">
+                                <label for="fechaDevolucion<?= $reserva['id'] ?>" class="form-label">Fecha de Devolución <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="fechaDevolucion<?= $reserva['id'] ?>" name="fecha_devolucion" required min="<?= date('Y-m-d') ?>">
+                            </div>
+                            <div class="mb-3">
+                                <label for="comentarios<?= $reserva['id'] ?>" class="form-label">Comentarios</label>
+                                <textarea class="form-control" id="comentarios<?= $reserva['id'] ?>" name="comentarios" rows="3" placeholder="Agregar observaciones sobre el préstamo..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <div class="modal-footer border-top">
+                    <?php if ($isBibliotecario ?? false): ?>
+                    <form method="post" action="<?= htmlspecialchars(url('reservas/cancelar/' . $reserva['id'])) ?>" class="me-auto">
+                        <button type="submit" class="btn btn-outline-danger">Cancelar Reserva</button>
+                    </form>
+                    <button type="submit" form="aprobarForm<?= $reserva['id'] ?>" class="btn btn-success">Aprobar y Prestar</button>
+                    <?php else: ?>
+                    <form method="post" action="<?= htmlspecialchars(url('reservas/cancelar/' . $reserva['id'])) ?>">
+                        <button type="submit" class="btn btn-outline-danger">Cancelar Reserva</button>
+                    </form>
+                    <?php endif; ?>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endforeach; ?>
+<?php endif; ?>
+
 <section>
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <h2 class="h4 mb-0">Historial completo</h2>

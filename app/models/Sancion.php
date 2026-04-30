@@ -15,14 +15,30 @@ class Sancion extends Model
 
     public static function getActivasByStudent(int $estudianteId): array
     {
-        $sql = 'SELECT * FROM sanciones WHERE estudiante_id = :estudiante_id AND activa = true AND fecha_fin >= CURDATE() ORDER BY fecha_fin DESC';
+        self::deactivateExpired();
+
+        $sql = 'SELECT * FROM sanciones WHERE estudiante_id = :estudiante_id AND activa = true ORDER BY fecha_fin DESC';
         
         return self::query($sql, ['estudiante_id' => $estudianteId])->fetchAll();
     }
 
     public static function hasActiveSanction(int $estudianteId): bool
     {
+        self::deactivateExpired();
+
         $sanciones = self::getActivasByStudent($estudianteId);
         return !empty($sanciones);
+    }
+
+    public static function deactivateExpired(): int
+    {
+        $sql = 'UPDATE sanciones SET activa = false WHERE activa = true AND fecha_fin < CURDATE()';
+        $stmt = self::query($sql);
+        return $stmt->rowCount();
+    }
+
+    public static function setActive(int $id, bool $activa): bool
+    {
+        return self::update($id, ['activa' => $activa]);
     }
 }

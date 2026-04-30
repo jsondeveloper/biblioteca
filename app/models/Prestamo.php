@@ -13,7 +13,7 @@ class Prestamo extends Model
         return ['libro_id', 'estudiante_id', 'bibliotecario_id', 'fecha_prestamo', 'fecha_devolucion', 'fecha_entrega', 'estado', 'observaciones'];
     }
 
-    public static function lendBook(int $libroId, int $estudianteId, int $bibliotecarioId, string $fechaDevolucion, int $cambiadoPorUsuarioId): array
+    public static function lendBook(int $libroId, int $estudianteId, int $bibliotecarioId, string $fechaDevolucion, int $cambiadoPorUsuarioId, string $observaciones = ''): array
     {
         $errors = [];
 
@@ -74,7 +74,7 @@ class Prestamo extends Model
                 'fecha_devolucion' => $fechaDevolucion,
                 'fecha_entrega' => null,
                 'estado' => 'Activo',
-                'observaciones' => null,
+                'observaciones' => $observaciones !== '' ? $observaciones : null,
             ]);
 
             Libro::lend($libroId);
@@ -99,8 +99,36 @@ class Prestamo extends Model
         return checkdate((int) $parts[1], (int) $parts[2], (int) $parts[0]);
     }
 
-    public static function returnBook(int $prestamoId, int $cambiadoPorUsuarioId): array
+    public static function returnBook(int $prestamoId, int $cambiadoPorUsuarioId, ?string $comentario = null, ?array $sancionData = null): array
     {
+        $errors = [];
+
+        if ($prestamoId <= 0) {
+            $errors[] = 'El ID del préstamo es inválido.';
+        }
+
+        if (!empty($sancionData)) {
+            if (trim($sancionData['razon'] ?? '') === '') {
+                $errors[] = 'Debes indicar la razón de la sanción.';
+            }
+
+            if (!self::isValidDate($sancionData['fecha_inicio'] ?? '')) {
+                $errors[] = 'La fecha de inicio de la sanción no es válida.';
+            }
+
+            if (!self::isValidDate($sancionData['fecha_fin'] ?? '')) {
+                $errors[] = 'La fecha de fin de la sanción no es válida.';
+            }
+
+            if (!empty($sancionData['fecha_inicio']) && !empty($sancionData['fecha_fin']) && strtotime($sancionData['fecha_inicio']) > strtotime($sancionData['fecha_fin'])) {
+                $errors[] = 'La fecha de fin de la sanción debe ser igual o posterior a la fecha de inicio.';
+            }
+        }
+
+        if (!empty($errors)) {
+            return ['success' => false, 'errors' => $errors];
+        }
+
         if ($prestamoId <= 0) {
             return ['success' => false, 'errors' => ['El ID del préstamo es inválido.']];
         }
@@ -131,8 +159,22 @@ class Prestamo extends Model
             }
 
             Libro::release((int) $prestamo['libro_id']);
-            $mensajeHistorial = $estado === 'Retrasado' ? 'Devolución procesada con atraso.' : 'Devolución procesada a tiempo.';
+            $mensajeHistorial = $comentario !== null && trim($comentario) !== ''
+                ? $comentario
+                : ($estado === 'Retrasado' ? 'Devolución procesada con atraso.' : 'Devolución procesada a tiempo.');
+
             self::recordHistory($prestamoId, 'Activo', $estado, $cambiadoPorUsuarioId, $mensajeHistorial);
+
+            if (!empty($sancionData) && trim($sancionData['razon'] ?? '') !== '') {
+                Sancion::create([
+                    'estudiante_id' => (int) $prestamo['estudiante_id'],
+                    'razon' => trim($sancionData['razon']),
+                    'fecha_inicio' => trim($sancionData['fecha_inicio']),
+                    'fecha_fin' => trim($sancionData['fecha_fin']),
+                    'activa' => !empty($sancionData['activa']),
+                ]);
+                self::recordHistory($prestamoId, $estado, $estado, $cambiadoPorUsuarioId, 'Sanción creada para el estudiante: ' . trim($sancionData['razon']));
+            }
 
             $connection->commit();
             $mensaje = $estado === 'Retrasado' ? 'Devolución registrada (RETRASADA).' : 'Devolución registrada exitosamente.';
@@ -171,11 +213,14 @@ class Prestamo extends Model
 
     public static function fullHistory(): array
     {
-        $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario
+        $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario,
+                       GROUP_CONCAT(CONCAT(ph.estado_anterior, " → ", ph.estado_nuevo, ": ", COALESCE(ph.comentario, "Sin comentario")) SEPARATOR "; ") AS comentarios_historial
                 FROM prestamos p
                 JOIN libros l ON p.libro_id = l.id
                 JOIN estudiantes e ON p.estudiante_id = e.id
                 JOIN bibliotecarios b ON p.bibliotecario_id = b.id
+                LEFT JOIN prestamos_historial ph ON p.id = ph.prestamo_id
+                GROUP BY p.id
                 ORDER BY p.fecha_prestamo DESC, p.id DESC';
 
         return self::query($sql)->fetchAll();
@@ -183,18 +228,21 @@ class Prestamo extends Model
 
     public static function historyByStudent(int $estudianteId): array
     {
-        $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario
+        $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario,
+                       GROUP_CONCAT(CONCAT(ph.estado_anterior, " → ", ph.estado_nuevo, ": ", COALESCE(ph.comentario, "Sin comentario")) SEPARATOR "; ") AS comentarios_historial
                 FROM prestamos p
                 JOIN libros l ON p.libro_id = l.id
                 JOIN estudiantes e ON p.estudiante_id = e.id
                 JOIN bibliotecarios b ON p.bibliotecario_id = b.id
+                LEFT JOIN prestamos_historial ph ON p.id = ph.prestamo_id
                 WHERE p.estudiante_id = :estudiante_id
+                GROUP BY p.id
                 ORDER BY p.fecha_prestamo DESC, p.id DESC';
 
         return self::query($sql, ['estudiante_id' => $estudianteId])->fetchAll();
     }
 
-    public static function lendFromReservation(int $reservaId, int $bibliotecarioId, string $fechaDevolucion, int $cambiadoPorUsuarioId): array
+    public static function lendFromReservation(int $reservaId, int $bibliotecarioId, string $fechaDevolucion, int $cambiadoPorUsuarioId, string $observaciones = ''): array
     {
         if ($reservaId <= 0) {
             return ['success' => false, 'errors' => ['La reserva es invalida.'], 'id' => null];
@@ -259,6 +307,8 @@ class Prestamo extends Model
             return ['success' => false, 'errors' => ['El libro ya tiene un prestamo activo.'], 'id' => null];
         }
 
+        $observacionesFinal = !empty($observaciones) ? $observaciones : 'Prestamo generado desde reserva aprobada.';
+
         $connection = self::db();
         $connection->beginTransaction();
 
@@ -271,7 +321,7 @@ class Prestamo extends Model
                 'fecha_devolucion' => $fechaDevolucion,
                 'fecha_entrega' => null,
                 'estado' => 'Activo',
-                'observaciones' => 'Prestamo generado desde reserva aprobada.',
+                'observaciones' => $observacionesFinal,
             ]);
 
             Libro::lend((int) $reserva['libro_id']);

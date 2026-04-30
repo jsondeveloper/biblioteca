@@ -19,6 +19,7 @@ $router->get('/libros', [LibroController::class, 'listar']);
 $router->get('/libros/buscar', [LibroController::class, 'buscar']);
 $router->get('/libros/crear', [LibroController::class, 'crear']);
 $router->post('/libros/crear', [LibroController::class, 'crear']);
+$router->get('/libros/{id}/historial', [LibroController::class, 'historial']);
 $router->get('/libros/actualizar/{id}', [LibroController::class, 'actualizar']);
 $router->get('/libros/editar/{id}', [LibroController::class, 'actualizar']);
 $router->post('/libros/actualizar/{id}', [LibroController::class, 'actualizar']);
@@ -34,7 +35,14 @@ $router->post('/categorias/eliminar/{id}', [CategoriaController::class, 'elimina
 $router->get('/prestamos', [PrestamoController::class, 'historial']);
 $router->get('/prestamos/crear', [PrestamoController::class, 'registrar']);
 $router->post('/prestamos/crear', [PrestamoController::class, 'registrar']);
+$router->get('/prestamos/devolver/{id}', [PrestamoController::class, 'devolver']);
 $router->post('/prestamos/devolver/{id}', [PrestamoController::class, 'devolver']);
+
+$router->get('/sanciones', [SancionController::class, 'index']);
+$router->get('/sanciones/crear', [SancionController::class, 'crear']);
+$router->post('/sanciones/crear', [SancionController::class, 'crear']);
+$router->post('/sanciones/activar/{id}', [SancionController::class, 'activar']);
+$router->post('/sanciones/desactivar/{id}', [SancionController::class, 'desactivar']);
 
 $router->get('/reservas', [ReservaController::class, 'index']);
 $router->get('/reservas/crear', [ReservaController::class, 'reservar']);

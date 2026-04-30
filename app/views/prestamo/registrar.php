@@ -48,8 +48,12 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">Fecha de devolucion</label>
-                <input type="date" name="fecha_devolucion" class="form-control form-control-lg" required>
+                <input type="date" name="fecha_devolucion" class="form-control form-control-lg" value="<?= htmlspecialchars($_POST['fecha_devolucion'] ?? '') ?>" required>
                 <div class="invalid-feedback">Selecciona una fecha de devolucion.</div>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-control" rows="4" placeholder="Observaciones adicionales sobre el prestamo..."><?= htmlspecialchars($observaciones ?? ($_POST['observaciones'] ?? '')) ?></textarea>
             </div>
         </div>
         <div class="d-flex flex-wrap gap-3 mt-4">

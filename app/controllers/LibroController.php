@@ -29,6 +29,24 @@ class LibroController extends BaseController
         ]);
     }
 
+    public function historial(string $id): void
+    {
+        $libro = Libro::find((int) $id);
+        if ($libro === null) {
+            header('HTTP/1.0 404 Not Found');
+            echo '<h1>Libro no encontrado</h1>';
+            return;
+        }
+
+        $prestamos = Prestamo::historyByBook((int) $id);
+
+        $this->render('libro/historial', [
+            'title' => 'Hoja de vida del libro',
+            'libro' => $libro,
+            'prestamos' => $prestamos,
+        ]);
+    }
+
     public function crear(): void
     {
         Auth::requireAuth(['bibliotecario']);

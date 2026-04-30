@@ -20,6 +20,7 @@ class RouteProtection
             'crear' => ['bibliotecario'],
             'actualizar' => ['bibliotecario'],
             'eliminar' => ['bibliotecario'],
+            'historial' => ['bibliotecario'],
         ],
         'PrestamoController' => [
             'registrar' => ['bibliotecario'],
@@ -31,6 +32,12 @@ class RouteProtection
             'cancelar' => ['estudiante', 'bibliotecario'],
             'index' => ['estudiante', 'bibliotecario'],
             'aprobar' => ['bibliotecario'],
+        ],
+        'SancionController' => [
+            'index' => ['bibliotecario'],
+            'crear' => ['bibliotecario'],
+            'activar' => ['bibliotecario'],
+            'desactivar' => ['bibliotecario'],
         ],
     ];
 

@@ -27,8 +27,13 @@
                 <div class="form-text">La reserva se cancelara automaticamente si no es aprobada.</div>
             </div>
         </div>
+        <?php if (!empty($tieneSancionActiva)): ?>
+            <div class="alert alert-warning border-0 shadow-sm mb-4">
+                Este estudiante tiene sanciones activas y no puede crear nuevas reservas hasta que sean desactivadas.
+            </div>
+        <?php endif; ?>
         <div class="d-flex flex-wrap gap-3 mt-4">
-            <button type="submit" class="btn btn-primary btn-lg">Crear reserva</button>
+            <button type="submit" class="btn btn-primary btn-lg" <?= !empty($tieneSancionActiva) ? 'disabled' : '' ?>>Crear reserva</button>
             <a href="<?= htmlspecialchars(url('reservas')) ?>" class="btn btn-outline-secondary btn-lg">Volver a reservas</a>
         </div>
     </form>

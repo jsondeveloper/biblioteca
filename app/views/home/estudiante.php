@@ -12,7 +12,7 @@
 </section>
 
 <section class="row g-4 mb-4">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="table-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="h4 mb-0">Mis prestamos activos</h2>
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div class="table-card p-4 h-100">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="h4 mb-0">Mis reservas activas</h2>
@@ -59,6 +59,33 @@
                                 <span>Reservado desde: <?= htmlspecialchars($reserva['fecha_reserva']) ?></span>
                             </div>
                             <span class="badge <?= htmlspecialchars(status_badge_class('Activa')) ?>">Activa</span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="table-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4 mb-0">Mis sanciones activas</h2>
+                <span class="badge badge-soft-danger"><?= count($mis_sanciones ?? []) ?> activa<?= (count($mis_sanciones ?? []) !== 1) ? 's' : '' ?></span>
+            </div>
+            <?php if (empty($mis_sanciones ?? [])): ?>
+                <div class="empty-state">
+                    <p class="mb-3">No tienes sanciones activas.</p>
+                    <span class="text-success">¡Excelente comportamiento!</span>
+                </div>
+            <?php else: ?>
+                <div class="vstack gap-3">
+                    <?php foreach ($mis_sanciones as $sancion): ?>
+                        <div class="quick-link border-danger">
+                            <div>
+                                <strong class="text-danger"><?= htmlspecialchars($sancion['razon']) ?></strong>
+                                <span>Vence el: <?= htmlspecialchars($sancion['fecha_fin']) ?></span>
+                            </div>
+                            <span class="badge bg-danger">Activa</span>
                         </div>
                     <?php endforeach; ?>
                 </div>

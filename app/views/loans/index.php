@@ -38,9 +38,8 @@
                             <td><span class="badge <?= htmlspecialchars(status_badge_class($loan['estado'])) ?>"><?= htmlspecialchars($loan['estado']) ?></span></td>
                             <td>
                                 <?php if (($isBibliotecario ?? false) && $loan['estado'] === 'Activo'): ?>
-                                    <form method="post" action="<?= htmlspecialchars(url('prestamos/devolver/' . $loan['id'])) ?>" class="d-inline-block">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Confirmar devolucion del libro?')">Devolver</button>
-                                    </form>
+                                    <a class="btn btn-sm btn-outline-danger me-2" href="<?= htmlspecialchars(url('prestamos/devolver/' . $loan['id'])) ?>">Devolver</a>
+                                    <a class="btn btn-sm btn-outline-warning" href="<?= htmlspecialchars(url('sanciones/crear?estudiante_id=' . $loan['estudiante_id'])) ?>">Sancionar</a>
                                 <?php endif; ?>
                             </td>
                         </tr>

@@ -78,6 +78,10 @@
                                                     <span>Prestar</span>
                                                 </a>
                                             <?php endif; ?>
+                                            <a class="btn btn-sm btn-outline-secondary action-icon-btn" href="<?= htmlspecialchars(url('libros/' . $libro['id'] . '/historial')) ?>" title="Ver hoja de vida">
+                                                <i class="bi bi-journal-text"></i>
+                                                <span>Hoja de vida</span>
+                                            </a>
                                             <a class="btn btn-sm btn-outline-primary action-icon-btn" href="<?= htmlspecialchars(url('libros/actualizar/' . $libro['id'])) ?>" title="Editar libro">
                                                 <i class="bi bi-pencil-square"></i>
                                                 <span>Editar</span>

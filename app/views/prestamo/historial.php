@@ -42,6 +42,7 @@
                             <th>Fecha de prestamo</th>
                             <th>Fecha de devolucion</th>
                             <th>Estado</th>
+                            <th>Observaciones</th>
                             <?php if ($isBibliotecario ?? false): ?>
                                 <th class="text-end">Acciones</th>
                             <?php endif; ?>
@@ -55,11 +56,16 @@
                                 <td><?= htmlspecialchars($prestamo['fecha_prestamo']) ?></td>
                                 <td><?= htmlspecialchars($prestamo['fecha_devolucion']) ?></td>
                                 <td><span class="badge <?= htmlspecialchars(status_badge_class($prestamo['estado'])) ?>"><?= htmlspecialchars($prestamo['estado']) ?></span></td>
+                                <td>
+                                    <?php if (!empty($prestamo['observaciones'])): ?>
+                                        <small class="text-muted"><?= htmlspecialchars($prestamo['observaciones']) ?></small>
+                                    <?php else: ?>
+                                        <small class="text-muted">-</small>
+                                    <?php endif; ?>
+                                </td>
                                 <?php if ($isBibliotecario ?? false): ?>
                                     <td class="text-end">
-                                        <form method="post" action="<?= htmlspecialchars(url('prestamos/devolver/' . $prestamo['id'])) ?>" class="d-inline-block">
-                                            <button type="submit" class="btn btn-sm btn-outline-success">Marcar devolucion</button>
-                                        </form>
+                                        <a class="btn btn-sm btn-outline-success" href="<?= htmlspecialchars(url('prestamos/devolver/' . $prestamo['id'])) ?>">Marcar devolucion</a>
                                     </td>
                                 <?php endif; ?>
                             </tr>
@@ -96,6 +102,8 @@
                             <th>Devolucion</th>
                             <th>Entrega</th>
                             <th>Estado</th>
+                            <th>Observaciones</th>
+                            <th>Comentarios</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,6 +116,22 @@
                                 <td><?= htmlspecialchars($prestamo['fecha_devolucion'] ?? '-') ?></td>
                                 <td><?= htmlspecialchars($prestamo['fecha_entrega'] ?? '-') ?></td>
                                 <td><span class="badge <?= htmlspecialchars(status_badge_class($prestamo['estado'])) ?>"><?= htmlspecialchars($prestamo['estado']) ?></span></td>
+                                <td>
+                                    <?php if (!empty($prestamo['observaciones'])): ?>
+                                        <small class="text-muted"><?= htmlspecialchars($prestamo['observaciones']) ?></small>
+                                    <?php else: ?>
+                                        <small class="text-muted">-</small>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($prestamo['comentarios_historial'])): ?>
+                                        <small class="text-muted" title="<?= htmlspecialchars($prestamo['comentarios_historial']) ?>">
+                                            <?= htmlspecialchars(strlen($prestamo['comentarios_historial']) > 50 ? substr($prestamo['comentarios_historial'], 0, 50) . '...' : $prestamo['comentarios_historial']) ?>
+                                        </small>
+                                    <?php else: ?>
+                                        <small class="text-muted">-</small>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

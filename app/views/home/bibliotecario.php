@@ -69,5 +69,14 @@
                     
                 </a>
         </div>
+        <div class="col-md-4">
+            <a href="<?= htmlspecialchars(url('sanciones')) ?>" class="quick-link">
+                    <div>
+                        <strong>Ver sanciones</strong>
+                        <span>Consulta y administra sanciones vigentes y registradas.</span>
+                    </div>
+                    
+                </a>
+        </div>
     </div>
 </section>
