@@ -14,6 +14,9 @@ class RouteProtection
             'actualizar' => ['bibliotecario'],
             'eliminar' => ['bibliotecario'],
         ],
+        'EstudianteController' => [
+            'index' => ['bibliotecario'],
+        ],
         'LibroController' => [
             'listar' => ['bibliotecario', 'estudiante'],
             'buscar' => ['bibliotecario', 'estudiante'],

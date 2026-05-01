@@ -15,6 +15,8 @@ $router->get('/registro/{role}', [AuthController::class, 'registro']);
 $router->get('/registro', [AuthController::class, 'registro']);
 $router->post('/registro', [AuthController::class, 'registro']);
 
+$router->get('/estudiantes', [EstudianteController::class, 'index']);
+
 $router->get('/libros', [LibroController::class, 'listar']);
 $router->get('/libros/buscar', [LibroController::class, 'buscar']);
 $router->get('/libros/crear', [LibroController::class, 'crear']);

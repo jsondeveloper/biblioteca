@@ -46,8 +46,8 @@
                             <tr>
                                 <td class="fw-semibold"><?= htmlspecialchars($reserva['libro']) ?></td>
                                 <td><?= htmlspecialchars($reserva['estudiante']) ?></td>
-                                <td><?= htmlspecialchars($reserva['created_at']) ?></td>
-                                <td><?= htmlspecialchars($expirationDateTime) ?></td>
+                                <td><?= htmlspecialchars(date('Y-m-d', strtotime($reserva['created_at']))) ?></td>
+                                <td><?= htmlspecialchars(date('Y-m-d', strtotime($expirationDateTime))) ?></td>
                                 <td>
                                     <span id="countdown-<?= $reserva['id'] ?>" data-expiry="<?= htmlspecialchars($expirationDateTime) ?>" class="badge badge-soft-warning fw-semibold">
                                         Calculando...
@@ -218,9 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const countdownElements = document.querySelectorAll('[id^="countdown-"]');
 
         countdownElements.forEach(element => {
-            const reservaId = element.id.replace('countdown-', '');
-            const row = element.closest('tr');
-
             // Obtener fecha de expiración registrada en el atributo data-expiry
             const expiryText = element.dataset.expiry;
             if (!expiryText) return;
@@ -239,8 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const timeString = formatTime(secondsLeft);
-            element.textContent = timeString;
+            element.textContent = formatTime(secondsLeft);
 
             // Cambiar color según tiempo restante
             if (secondsLeft <= 3600) { // Menos de 1 hora
