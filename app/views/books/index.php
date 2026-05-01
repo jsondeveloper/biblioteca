@@ -49,7 +49,7 @@
 
 <!-- Modal de Confirmación de Reserva -->
 <div class="modal fade" id="reservaModal" tabindex="-1" aria-labelledby="reservaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="reservaModalLabel">Confirmar reserva</h5>

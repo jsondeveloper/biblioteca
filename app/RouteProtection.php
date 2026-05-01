@@ -36,6 +36,7 @@ class RouteProtection
         'SancionController' => [
             'index' => ['bibliotecario'],
             'crear' => ['bibliotecario'],
+            'actualizar' => ['bibliotecario'],
             'activar' => ['bibliotecario'],
             'desactivar' => ['bibliotecario'],
         ],

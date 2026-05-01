@@ -78,7 +78,7 @@
     <?php foreach ($reservasActivas as $reserva): ?>
     <!-- Modal para gestionar reserva -->
     <div class="modal fade" id="reservaModal<?= $reserva['id'] ?>" tabindex="-1" aria-labelledby="reservaModalLabel<?= $reserva['id'] ?>" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header border-bottom">
                     <h5 class="modal-title" id="reservaModalLabel<?= $reserva['id'] ?>">Gestionar Reserva</h5>
