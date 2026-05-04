@@ -61,6 +61,7 @@ function status_badge_class(?string $status): string
         'Prestado', 'Cumplida' => 'badge-soft-primary',
         'Mantenimiento', 'Cancelada' => 'badge-soft-secondary',
         'Devuelto' => 'badge-soft-info',
+        'Devolucion Retrasada' => 'badge-soft-danger',
         'Retrasado' => 'badge-soft-danger',
         default => 'badge-soft-dark',
     };

@@ -7,6 +7,7 @@ class EstudianteController extends BaseController
     {
         Auth::requireAuth(['bibliotecario']);
         Sancion::deactivateExpired();
+        Prestamo::markOverdueLoans(Auth::getUserId());
 
         $estudiantes = self::query(
             'SELECT e.id, e.nombre, e.telefono, u.email, u.username

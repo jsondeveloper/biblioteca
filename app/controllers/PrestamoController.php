@@ -58,6 +58,7 @@ class PrestamoController extends BaseController
     public function devolver(string $id): void
     {
         Auth::requireAuth(['bibliotecario']);
+        Prestamo::markOverdueLoans(Auth::getUserId());
 
         $prestamoId = (int) $id;
         $mensaje = null;
@@ -91,8 +92,8 @@ class PrestamoController extends BaseController
             'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante FROM prestamos p
              JOIN libros l ON p.libro_id = l.id
              JOIN estudiantes e ON p.estudiante_id = e.id
-             WHERE p.id = :id AND p.estado = :estado',
-            ['id' => $prestamoId, 'estado' => 'Activo']
+             WHERE p.id = :id AND p.estado IN ("Activo", "Retrasado") AND p.fecha_entrega IS NULL',
+            ['id' => $prestamoId]
         )->fetch();
 
         if (!$prestamo) {

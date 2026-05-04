@@ -101,6 +101,8 @@ class Prestamo extends Model
 
     public static function returnBook(int $prestamoId, int $cambiadoPorUsuarioId, ?string $comentario = null, ?array $sancionData = null): array
     {
+        self::markOverdueLoans($cambiadoPorUsuarioId);
+
         $errors = [];
 
         if ($prestamoId <= 0) {
@@ -138,7 +140,7 @@ class Prestamo extends Model
             return ['success' => false, 'errors' => ['El préstamo no existe.']];
         }
 
-        if ($prestamo['estado'] !== 'Activo') {
+        if (!in_array($prestamo['estado'], ['Activo', 'Retrasado'], true)) {
             return ['success' => false, 'errors' => ['El préstamo no está activo. Estado actual: ' . htmlspecialchars($prestamo['estado'])]];
         }
 
@@ -147,10 +149,12 @@ class Prestamo extends Model
 
         try {
             $fechaEntrega = date('Y-m-d');
-            $estado = strtotime($fechaEntrega) > strtotime($prestamo['fecha_devolucion']) ? 'Retrasado' : 'Devuelto';
+            $estadoAnterior = $prestamo['estado'];
+            $esEntregaRetrasada = $estadoAnterior === 'Retrasado' || strtotime($fechaEntrega) > strtotime($prestamo['fecha_devolucion']);
+            $estadoFinal = $esEntregaRetrasada ? 'Devolucion Retrasada' : 'Devuelto';
 
             $actualizado = self::update($prestamoId, [
-                'estado' => $estado,
+                'estado' => $estadoFinal,
                 'fecha_entrega' => $fechaEntrega,
             ]);
 
@@ -161,9 +165,9 @@ class Prestamo extends Model
             Libro::release((int) $prestamo['libro_id']);
             $mensajeHistorial = $comentario !== null && trim($comentario) !== ''
                 ? $comentario
-                : ($estado === 'Retrasado' ? 'Devolución procesada con atraso.' : 'Devolución procesada a tiempo.');
+                : ($esEntregaRetrasada ? 'Devolucion procesada con atraso.' : 'Devolucion procesada a tiempo.');
 
-            self::recordHistory($prestamoId, 'Activo', $estado, $cambiadoPorUsuarioId, $mensajeHistorial);
+            self::recordHistory($prestamoId, $estadoAnterior, $estadoFinal, $cambiadoPorUsuarioId, $mensajeHistorial);
 
             if (!empty($sancionData) && trim($sancionData['razon'] ?? '') !== '') {
                 Sancion::create([
@@ -173,11 +177,11 @@ class Prestamo extends Model
                     'fecha_fin' => trim($sancionData['fecha_fin']),
                     'activa' => !empty($sancionData['activa']),
                 ]);
-                self::recordHistory($prestamoId, $estado, $estado, $cambiadoPorUsuarioId, 'Sanción creada para el estudiante: ' . trim($sancionData['razon']));
+                self::recordHistory($prestamoId, $estadoFinal, $estadoFinal, $cambiadoPorUsuarioId, 'Sancion creada para el estudiante: ' . trim($sancionData['razon']));
             }
 
             $connection->commit();
-            $mensaje = $estado === 'Retrasado' ? 'Devolución registrada (RETRASADA).' : 'Devolución registrada exitosamente.';
+            $mensaje = $esEntregaRetrasada ? 'Devolucion retrasada registrada.' : 'Devolucion registrada exitosamente.';
             return ['success' => true, 'errors' => [], 'message' => $mensaje];
         } catch (Throwable $exception) {
             $connection->rollBack();
@@ -187,32 +191,38 @@ class Prestamo extends Model
 
     public static function activeLoans(): array
     {
+        self::markOverdueLoans();
+
         $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario
                 FROM prestamos p
                 JOIN libros l ON p.libro_id = l.id
                 JOIN estudiantes e ON p.estudiante_id = e.id
                 JOIN bibliotecarios b ON p.bibliotecario_id = b.id
-                WHERE p.estado = :estado
+                WHERE p.estado IN ("Activo", "Retrasado") AND p.fecha_entrega IS NULL
                 ORDER BY p.fecha_prestamo DESC';
 
-        return self::query($sql, ['estado' => 'Activo'])->fetchAll();
+        return self::query($sql)->fetchAll();
     }
 
     public static function activeLoansByStudent(int $estudianteId): array
     {
+        self::markOverdueLoans();
+
         $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario
                 FROM prestamos p
                 JOIN libros l ON p.libro_id = l.id
                 JOIN estudiantes e ON p.estudiante_id = e.id
                 JOIN bibliotecarios b ON p.bibliotecario_id = b.id
-                WHERE p.estado = :estado AND p.estudiante_id = :estudiante_id
+                WHERE p.estado IN ("Activo", "Retrasado") AND p.fecha_entrega IS NULL AND p.estudiante_id = :estudiante_id
                 ORDER BY p.fecha_prestamo DESC';
 
-        return self::query($sql, ['estado' => 'Activo', 'estudiante_id' => $estudianteId])->fetchAll();
+        return self::query($sql, ['estudiante_id' => $estudianteId])->fetchAll();
     }
 
     public static function fullHistory(): array
     {
+        self::markOverdueLoans();
+
         $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario,
                        GROUP_CONCAT(CONCAT(ph.estado_anterior, " → ", ph.estado_nuevo, ": ", COALESCE(ph.comentario, "Sin comentario")) SEPARATOR "; ") AS comentarios_historial
                 FROM prestamos p
@@ -228,6 +238,8 @@ class Prestamo extends Model
 
     public static function historyByStudent(int $estudianteId): array
     {
+        self::markOverdueLoans();
+
         $sql = 'SELECT p.*, l.titulo AS libro, e.nombre AS estudiante, b.nombre AS bibliotecario,
                        GROUP_CONCAT(CONCAT(ph.estado_anterior, " → ", ph.estado_nuevo, ": ", COALESCE(ph.comentario, "Sin comentario")) SEPARATOR "; ") AS comentarios_historial
                 FROM prestamos p
@@ -299,8 +311,8 @@ class Prestamo extends Model
         }
 
         $prestamoActivo = self::query(
-            'SELECT id FROM prestamos WHERE libro_id = :libro_id AND estado = :estado LIMIT 1',
-            ['libro_id' => $reserva['libro_id'], 'estado' => 'Activo']
+            'SELECT id FROM prestamos WHERE libro_id = :libro_id AND estado IN ("Activo", "Retrasado") AND fecha_entrega IS NULL LIMIT 1',
+            ['libro_id' => $reserva['libro_id']]
         )->fetch();
 
         if ($prestamoActivo) {
@@ -338,6 +350,8 @@ class Prestamo extends Model
 
     public static function historyByBook(int $libroId): array
     {
+        self::markOverdueLoans();
+
         $sql = 'SELECT p.*, e.nombre AS estudiante, b.nombre AS bibliotecario
                 FROM prestamos p
                 JOIN estudiantes e ON p.estudiante_id = e.id
@@ -348,7 +362,135 @@ class Prestamo extends Model
         return self::query($sql, ['libro_id' => $libroId])->fetchAll();
     }
 
-    protected static function recordHistory(int $prestamoId, string $estadoAnterior, string $estadoNuevo, int $cambiadoPor, ?string $comentario = null): void
+    public static function markOverdueLoans(?int $cambiadoPorUsuarioId = null): int
+    {
+        $today = date('Y-m-d');
+        $loans = self::query(
+            'SELECT id FROM prestamos
+             WHERE estado = :estado
+               AND fecha_entrega IS NULL
+               AND fecha_devolucion IS NOT NULL
+               AND fecha_devolucion < :today',
+            ['estado' => 'Activo', 'today' => $today]
+        )->fetchAll();
+
+        if (empty($loans)) {
+            return self::markLateReturnedLoans($cambiadoPorUsuarioId);
+        }
+
+        $connection = self::db();
+        $ownsTransaction = !$connection->inTransaction();
+
+        if ($ownsTransaction) {
+            $connection->beginTransaction();
+        }
+
+        try {
+            $updatedCount = 0;
+
+            foreach ($loans as $loan) {
+                $stmt = self::query(
+                    'UPDATE prestamos SET estado = :estado_nuevo WHERE id = :id AND estado = :estado_anterior',
+                    [
+                        'id' => (int) $loan['id'],
+                        'estado_anterior' => 'Activo',
+                        'estado_nuevo' => 'Retrasado',
+                    ]
+                );
+
+                if ($stmt->rowCount() === 0) {
+                    continue;
+                }
+
+                self::recordHistory(
+                    (int) $loan['id'],
+                    'Activo',
+                    'Retrasado',
+                    $cambiadoPorUsuarioId,
+                    'Marcado automaticamente como retrasado por fecha de devolucion vencida.'
+                );
+
+                $updatedCount++;
+            }
+
+            if ($ownsTransaction) {
+                $connection->commit();
+            }
+
+            return $updatedCount + self::markLateReturnedLoans($cambiadoPorUsuarioId);
+        } catch (Throwable $exception) {
+            if ($ownsTransaction) {
+                $connection->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
+    public static function markLateReturnedLoans(?int $cambiadoPorUsuarioId = null): int
+    {
+        $loans = self::query(
+            'SELECT id, estado FROM prestamos
+             WHERE estado IN ("Devuelto", "Retrasado")
+               AND fecha_entrega IS NOT NULL
+               AND fecha_devolucion IS NOT NULL
+               AND fecha_entrega > fecha_devolucion'
+        )->fetchAll();
+
+        if (empty($loans)) {
+            return 0;
+        }
+
+        $connection = self::db();
+        $ownsTransaction = !$connection->inTransaction();
+
+        if ($ownsTransaction) {
+            $connection->beginTransaction();
+        }
+
+        try {
+            $updatedCount = 0;
+
+            foreach ($loans as $loan) {
+                $stmt = self::query(
+                    'UPDATE prestamos SET estado = :estado_nuevo WHERE id = :id AND estado = :estado_anterior',
+                    [
+                        'id' => (int) $loan['id'],
+                        'estado_anterior' => $loan['estado'],
+                        'estado_nuevo' => 'Devolucion Retrasada',
+                    ]
+                );
+
+                if ($stmt->rowCount() === 0) {
+                    continue;
+                }
+
+                self::recordHistory(
+                    (int) $loan['id'],
+                    $loan['estado'],
+                    'Devolucion Retrasada',
+                    $cambiadoPorUsuarioId,
+                    'Marcado automaticamente como retrasado porque la fecha de entrega supero la fecha de devolucion.'
+                );
+
+                $updatedCount++;
+            }
+
+            if ($ownsTransaction) {
+                $connection->commit();
+            }
+
+            return $updatedCount;
+        } catch (Throwable $exception) {
+            if ($ownsTransaction) {
+                $connection->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
+    protected static function recordHistory(int $prestamoId, string $estadoAnterior, string $estadoNuevo, ?int $cambiadoPor, ?string $comentario = null): void
     {
         $sql = 'INSERT INTO prestamos_historial (prestamo_id, estado_anterior, estado_nuevo, cambiado_por, comentario) VALUES (:prestamo_id, :estado_anterior, :estado_nuevo, :cambiado_por, :comentario)';
         self::query($sql, [
