@@ -36,16 +36,17 @@
                             <td class="text-secondary"><?= htmlspecialchars($categoria['descripcion'] ?? 'Sin descripcion') ?></td>
                             <td class="text-end">
                                 <div class="d-inline-flex flex-wrap justify-content-end gap-2">
-                                    <a class="btn btn-sm btn-outline-primary action-icon-btn" href="<?= htmlspecialchars(url('categorias/actualizar/' . $categoria['id'])) ?>">
-                                        <i class="bi bi-pencil-square"></i>
-                                        <span>Editar</span>
-                                    </a>
-                                    <form method="post" action="<?= htmlspecialchars(url('categorias/eliminar/' . $categoria['id'])) ?>" class="d-inline-block">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger action-icon-btn" onclick="return confirm('Se eliminara esta categoria. Deseas continuar?')">
-                                            <i class="bi bi-trash3"></i>
-                                            <span>Eliminar</span>
-                                        </button>
-                                    </form>
+                                    
+                                <a class="btn btn-sm btn-outline-primary action-icon-btn" href="<?= htmlspecialchars(url('categorias/actualizar/' . $categoria['id'])) ?>" title="Editar categoria">
+                                                <i class="bi bi-pencil-square"></i>
+                                                <span class="visually-hidden">Editar</span>
+                                            </a>
+                                            <form method="post" action="<?= htmlspecialchars(url('categorias/eliminar/' . $categoria['id'])) ?>" class="d-inline-block">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger action-icon-btn" title="Eliminar categoria" onclick="return confirm('Se eliminara esta categoria. Deseas continuar?')">
+                                                    <i class="bi bi-trash3"></i>
+                                                    <span class="visually-hidden">Eliminar</span>
+                                                </button>
+                                            </form>
                                 </div>
                             </td>
                         </tr>

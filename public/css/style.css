@@ -204,6 +204,7 @@ h1, h2, h3, h4, h5, h6,
 .action-icon-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.45rem;
     min-height: 38px;
 }
@@ -211,6 +212,60 @@ h1, h2, h3, h4, h5, h6,
 .action-icon-btn i {
     font-size: 0.95rem;
     line-height: 1;
+}
+
+.book-actions {
+    align-items: center;
+}
+
+.book-actions .action-icon-btn {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border: 1px solid rgba(22, 50, 79, 0.10);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--text-soft);
+    box-shadow: none;
+    transition: transform 0.16s ease, background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+}
+
+.book-actions .action-icon-btn:hover,
+.book-actions .action-icon-btn:focus {
+    transform: translateY(-1px);
+    background: #ffffff;
+    border-color: rgba(22, 50, 79, 0.18);
+    color: var(--text-strong);
+}
+
+.book-actions .btn-outline-success { color: #2f7d73; }
+.book-actions .btn-outline-primary { color: #2c6683; }
+.book-actions .btn-outline-secondary { color: #536677; }
+.book-actions .btn-outline-danger { color: #9d2f2f; }
+
+.book-actions .btn-outline-success:hover,
+.book-actions .btn-outline-success:focus {
+    background: rgba(47, 125, 115, 0.10);
+    color: #1d665c;
+}
+
+.book-actions .btn-outline-primary:hover,
+.book-actions .btn-outline-primary:focus {
+    background: rgba(66, 133, 168, 0.12);
+    color: #235f7c;
+}
+
+.book-actions .btn-outline-secondary:hover,
+.book-actions .btn-outline-secondary:focus {
+    background: rgba(110, 128, 141, 0.12);
+    color: #415463;
+}
+
+.book-actions .btn-outline-danger:hover,
+.book-actions .btn-outline-danger:focus {
+    background: rgba(190, 74, 74, 0.10);
+    color: #8f2929;
 }
 
 .app-navbar-toggler {
@@ -299,6 +354,9 @@ h1, h2, h3, h4, h5, h6,
 .metric-card--primary { border-left: 6px solid #2f7d73; }
 .metric-card--warning { border-left: 6px solid #d7a431; }
 .metric-card--info { border-left: 6px solid #4285a8; }
+.metric-card--success { border-left: 6px solid #3fa989; }
+.metric-card--danger { border-left: 6px solid #be4a4a; }
+.metric-card--secondary { border-left: 6px solid #6e808d; }
 
 .card,
 .table,
@@ -436,7 +494,6 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .quick-link span {
-    color: var(--text-soft);
     font-size: 0.88rem;
 }
 

@@ -17,6 +17,8 @@ class HomeController extends BaseController
 
             if ($role === 'bibliotecario') {
                 Prestamo::markOverdueLoans($userId);
+                Reserva::cancelExpiredReservations();
+                Sancion::deactivateExpired();
 
                 $data['libros_count'] = count(Libro::all());
                 $prestamosResult = $this->query(
@@ -24,6 +26,16 @@ class HomeController extends BaseController
                 );
                 $data['prestamos_activos'] = $prestamosResult->fetch()['count'];
                 $data['estudiantes_count'] = count(Estudiante::all());
+                $reservasResult = $this->query(
+                    'SELECT COUNT(*) as count FROM reservas WHERE estado = ?',
+                    ['Activa']
+                );
+                $data['reservas_activas'] = $reservasResult->fetch()['count'];
+                $sancionesResult = $this->query(
+                    'SELECT COUNT(*) as count FROM sanciones WHERE activa = true'
+                );
+                $data['sanciones_activas'] = $sancionesResult->fetch()['count'];
+                $data['categorias_count'] = count(Categoria::all());
                 $this->render('home/bibliotecario', $data);
             } else {
                 Sancion::deactivateExpired();

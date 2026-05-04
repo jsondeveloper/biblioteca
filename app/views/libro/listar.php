@@ -5,9 +5,7 @@
             <div>
                 <span class="eyebrow mb-3">Catalogo</span>
                 <h1 class="section-title"><?= htmlspecialchars($title ?? 'Libros') ?></h1>
-                <p class="section-subtitle">
-                    <?= !empty($term) ? 'Resultados filtrados para "' . htmlspecialchars($term) . '".' : 'Explora el inventario disponible de la biblioteca.' ?>
-                </p>
+                <p class="section-subtitle">Explora el inventario disponible de la biblioteca.</p>
             </div>
             <?php if ($isBibliotecario): ?>
                 <a class="btn btn-success" href="<?= htmlspecialchars(url('libros/crear')) ?>">
@@ -19,17 +17,16 @@
 </section>
 
 <section class="table-card p-4 mb-4">
-    <form method="get" action="<?= htmlspecialchars(url('libros/buscar')) ?>" class="row g-3 align-items-end">
-        <div class="col-lg-9">
-            <label class="form-label">Buscar por titulo, autor o ISBN</label>
-            <input type="text" class="form-control form-control-lg" name="q" value="<?= htmlspecialchars($term ?? '') ?>" placeholder="Ej. Cien años de soledad o 978-1234567890">
-        </div>
-        <div class="col-lg-3 d-grid">
-            <button type="submit" class="btn btn-primary btn-lg">
-                <i class="bi bi-search me-2"></i>Buscar libro
-            </button>
-        </div>
-    </form>
+    <div class="book-search">
+        <label class="form-label" for="bookSearch">Buscar por titulo, autor, ISBN, estado o anio</label>
+        <input
+            type="search"
+            id="bookSearch"
+            class="form-control form-control-lg"
+            placeholder="Ej. Cien anios de soledad o 978-1234567890"
+            autocomplete="off"
+        >
+    </div>
 </section>
 
 <section class="table-card p-4">
@@ -39,6 +36,10 @@
             <p class="text-secondary mb-0">Prueba con otro termino o registra un nuevo libro si tienes permisos.</p>
         </div>
     <?php else: ?>
+        <div id="bookSearchEmpty" class="empty-state d-none mb-3">
+            <h2 class="h4 mb-2">Sin resultados</h2>
+            <p class="text-secondary mb-0">No hay libros que coincidan con la busqueda.</p>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead>
@@ -54,7 +55,16 @@
                 </thead>
                 <tbody>
                     <?php foreach ($libros as $libro): ?>
-                        <tr>
+                        <?php
+                            $bookSearchText = implode(' ', [
+                                $libro['titulo'] ?? '',
+                                $libro['autor'] ?? '',
+                                $libro['isbn'] ?? '',
+                                $libro['estado'] ?? '',
+                                (string) ($libro['anio_publicacion'] ?? ''),
+                            ]);
+                        ?>
+                        <tr data-book-search="<?= htmlspecialchars(strtolower($bookSearchText)) ?>">
                             <td>
                                 <div class="fw-bold"><?= htmlspecialchars($libro['titulo']) ?></div>
                                 <div class="small text-secondary">Publicado: <?= htmlspecialchars((string) ($libro['anio_publicacion'] ?? 'N/D')) ?></div>
@@ -64,32 +74,32 @@
                             <td><span class="badge <?= htmlspecialchars(status_badge_class($libro['estado'])) ?>"><?= htmlspecialchars($libro['estado']) ?></span></td>
                             <?php if ($isBibliotecario || $isEstudiante): ?>
                                 <td class="text-end">
-                                    <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                    <div class="book-actions d-inline-flex flex-wrap justify-content-end gap-1">
                                         <?php if ($isEstudiante && $libro['estado'] === 'Disponible'): ?>
                                             <button type="button" class="btn btn-sm btn-outline-success action-icon-btn" onclick="openReservaModal(<?= $libro['id'] ?>, '<?= htmlspecialchars(addslashes($libro['titulo'])) ?>')" title="Reservar libro">
                                                 <i class="bi bi-bookmark-plus"></i>
-                                                <span>Reservar</span>
+                                                <span class="visually-hidden">Reservar</span>
                                             </button>
                                         <?php endif; ?>
                                         <?php if ($isBibliotecario): ?>
                                             <?php if ($libro['estado'] === 'Disponible'): ?>
                                                 <a class="btn btn-sm btn-outline-success action-icon-btn" href="<?= htmlspecialchars(url('prestamos/crear?libro_id=' . $libro['id'])) ?>" title="Registrar prestamo">
                                                     <i class="bi bi-journal-plus"></i>
-                                                    <span>Prestar</span>
+                                                    <span class="visually-hidden">Prestar</span>
                                                 </a>
                                             <?php endif; ?>
                                             <a class="btn btn-sm btn-outline-secondary action-icon-btn" href="<?= htmlspecialchars(url('libros/' . $libro['id'] . '/historial')) ?>" title="Ver hoja de vida">
                                                 <i class="bi bi-journal-text"></i>
-                                                <span>Hoja de vida</span>
+                                                <span class="visually-hidden">Hoja de vida</span>
                                             </a>
                                             <a class="btn btn-sm btn-outline-primary action-icon-btn" href="<?= htmlspecialchars(url('libros/actualizar/' . $libro['id'])) ?>" title="Editar libro">
                                                 <i class="bi bi-pencil-square"></i>
-                                                <span>Editar</span>
+                                                <span class="visually-hidden">Editar</span>
                                             </a>
                                             <form method="post" action="<?= htmlspecialchars(url('libros/eliminar/' . $libro['id'])) ?>" class="d-inline-block">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger action-icon-btn" title="Eliminar libro" onclick="return confirm('Se eliminara este libro. Deseas continuar?')">
                                                     <i class="bi bi-trash3"></i>
-                                                    <span>Eliminar</span>
+                                                    <span class="visually-hidden">Eliminar</span>
                                                 </button>
                                             </form>
                                         <?php endif; ?>
@@ -176,6 +186,30 @@ function closeReservaModal() {
 
 // Agregar event listeners cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
+    const bookSearch = document.getElementById('bookSearch');
+    const bookRows = document.querySelectorAll('tr[data-book-search]');
+    const bookSearchEmpty = document.getElementById('bookSearchEmpty');
+
+    if (bookSearch) {
+        bookSearch.addEventListener('input', function () {
+            const term = bookSearch.value.trim().toLowerCase();
+            let visibleRows = 0;
+
+            bookRows.forEach(function (row) {
+                const matches = row.dataset.bookSearch.includes(term);
+                row.classList.toggle('d-none', !matches);
+
+                if (matches) {
+                    visibleRows++;
+                }
+            });
+
+            if (bookSearchEmpty) {
+                bookSearchEmpty.classList.toggle('d-none', visibleRows > 0);
+            }
+        });
+    }
+
     // Cerrar modal al hacer click en el botón de cerrar
     const closeButtons = document.querySelectorAll('#reservaModal .btn-close, #reservaModal .btn-outline-secondary');
     closeButtons.forEach(button => {

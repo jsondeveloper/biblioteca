@@ -6,7 +6,6 @@
                 <h1 class="section-title"><?= htmlspecialchars($title ?? 'Listado de estudiantes') ?></h1>
                 <p class="section-subtitle">Consulta cada estudiante junto con sus reservas, prestamos y sanciones activos.</p>
             </div>
-            <a href="<?= htmlspecialchars(url('registro/estudiante')) ?>" class="btn btn-primary">Registrar estudiante</a>
         </div>
     </div>
 </section>
@@ -19,6 +18,15 @@
         </div>
         <span class="badge badge-soft-primary fs-6"><?= count($estudiantes ?? []) ?> estudiantes</span>
     </div>
+    <div class="mb-4">
+        <input
+            type="search"
+            id="studentSearch"
+            class="form-control"
+            placeholder="Buscar estudiante por nombre, correo, usuario o telefono"
+            autocomplete="off"
+        >
+    </div>
 
     <?php if (empty($estudiantes ?? [])): ?>
         <div class="empty-state">
@@ -26,6 +34,10 @@
             <p class="text-secondary mb-0">Registra estudiantes para consultar su actividad academica.</p>
         </div>
     <?php else: ?>
+        <div id="studentSearchEmpty" class="empty-state d-none mb-3">
+            <h3 class="h5 mb-2">Sin resultados</h3>
+            <p class="text-secondary mb-0">No hay estudiantes que coincidan con la busqueda.</p>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead>
@@ -43,8 +55,14 @@
                             $reservasActivas = $estudianteActividad['reservas'];
                             $prestamosActivos = $estudianteActividad['prestamos'];
                             $sancionesActivas = $estudianteActividad['sanciones'];
+                            $studentSearchText = implode(' ', [
+                                $estudiante['nombre'] ?? '',
+                                $estudiante['email'] ?? '',
+                                $estudiante['username'] ?? '',
+                                $estudiante['telefono'] ?? '',
+                            ]);
                         ?>
-                        <tr>
+                        <tr data-student-search="<?= htmlspecialchars(strtolower($studentSearchText)) ?>">
                             <td>
                                 <div class="fw-semibold"><?= htmlspecialchars($estudiante['nombre']) ?></div>
                                 <div class="text-secondary small"><?= htmlspecialchars($estudiante['email']) ?></div>
@@ -116,6 +134,30 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const studentSearch = document.getElementById('studentSearch');
+    const studentRows = document.querySelectorAll('tr[data-student-search]');
+    const studentSearchEmpty = document.getElementById('studentSearchEmpty');
+
+    if (studentSearch) {
+        studentSearch.addEventListener('input', function () {
+            const term = studentSearch.value.trim().toLowerCase();
+            let visibleRows = 0;
+
+            studentRows.forEach(function (row) {
+                const matches = row.dataset.studentSearch.includes(term);
+                row.classList.toggle('d-none', !matches);
+
+                if (matches) {
+                    visibleRows++;
+                }
+            });
+
+            if (studentSearchEmpty) {
+                studentSearchEmpty.classList.toggle('d-none', visibleRows > 0);
+            }
+        });
+    }
+
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
