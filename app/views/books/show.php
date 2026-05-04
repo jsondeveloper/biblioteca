@@ -19,7 +19,7 @@
                     <div class="form-control bg-light-subtle"><?= htmlspecialchars($book['isbn']) ?></div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Ano de publicacion</label>
+                    <label class="form-label">Año de publicacion</label>
                     <div class="form-control bg-light-subtle"><?= htmlspecialchars((string) ($book['anio_publicacion'] ?? 'No disponible')) ?></div>
                 </div>
                 <div class="col-md-6">

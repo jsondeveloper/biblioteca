@@ -19,7 +19,7 @@
                     <tr>
                         <th>Titulo</th>
                         <th>Autor</th>
-                        <th>Ano</th>
+                        <th>Año</th>
                         <th>ISBN</th>
                         <th>Accion</th>
                     </tr>

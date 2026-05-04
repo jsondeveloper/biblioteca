@@ -51,7 +51,7 @@
                 </select>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Ano de publicacion</label>
+                <label class="form-label">Año de publicacion</label>
                 <input type="number" name="anio_publicacion" value="<?= htmlspecialchars($libro['anio_publicacion'] ?? '') ?>" class="form-control" min="1500" max="2099">
             </div>
             <div class="col-12">
