@@ -24,7 +24,7 @@
         <?php if (empty($reservasActivas ?? [])): ?>
             <div class="empty-state">
                 <h3 class="h5 mb-2">Sin reservas activas</h3>
-                <p class="text-secondary mb-0">No hay reservas activas en este momento.</p>
+                <p class="text-secondary mb-0">No hay reservas activas por ahora.</p>
             </div>
         <?php else: ?>
             <div class="table-responsive">

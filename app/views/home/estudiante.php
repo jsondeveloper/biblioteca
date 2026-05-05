@@ -47,7 +47,7 @@
             </div>
             <?php if (empty($mis_reservas)): ?>
                 <div class="empty-state">
-                    <p class="mb-3">No tienes reservas activas en este momento.</p>
+                    <p class="mb-3">No tienes reservas activas por ahora.</p>
                     <a href="<?= htmlspecialchars(url('reservas/crear')) ?>" class="btn btn-success">Crear reserva</a>
                 </div>
             <?php else: ?>
