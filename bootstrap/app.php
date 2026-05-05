@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 define('BASE_PATH', dirname(__DIR__));
+date_default_timezone_set('America/Bogota');
 
 require_once BASE_PATH . '/app/helpers.php';
 
