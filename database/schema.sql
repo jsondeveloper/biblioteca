@@ -209,3 +209,19 @@ INSERT INTO sanciones (estudiante_id, razon, fecha_inicio, fecha_fin, activa) VA
 (1, 'Daño a libro de literatura', '2026-03-15', '2026-03-30', FALSE),
 (2, 'Tres prestamos retrasados en el ultimo mes', '2026-04-10', '2026-04-25', TRUE),
 (3, 'Perdida temporal de libro', '2026-03-01', '2026-03-15', FALSE);
+
+USE biblioteca;
+
+ALTER TABLE prestamos
+    MODIFY estado ENUM('Activo','Devuelto','Retrasado','Devolucion Retrasada') NOT NULL DEFAULT 'Activo';
+
+ALTER TABLE prestamos_historial
+    MODIFY estado_anterior ENUM('Activo','Devuelto','Retrasado','Devolucion Retrasada') NOT NULL,
+    MODIFY estado_nuevo ENUM('Activo','Devuelto','Retrasado','Devolucion Retrasada') NOT NULL;
+
+UPDATE prestamos
+SET estado = 'Devolucion Retrasada'
+WHERE estado IN ('Devuelto','Retrasado')
+  AND fecha_entrega IS NOT NULL
+  AND fecha_devolucion IS NOT NULL
+  AND fecha_entrega > fecha_devolucion;
