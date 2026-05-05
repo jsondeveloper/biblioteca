@@ -143,6 +143,22 @@ class SancionController extends BaseController
         redirect_to('sanciones?success=La sanción se actualizó correctamente.');
     }
 
+    public function eliminar(string $id): void
+    {
+        Auth::requireAuth(['bibliotecario']);
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect_to('sanciones');
+        }
+
+        $sancionId = (int) $id;
+        if (Sancion::find($sancionId) === null) {
+            redirect_to('sanciones?error=' . urlencode('La sanción no existe.'));
+        }
+
+        Sancion::delete($sancionId);
+        redirect_to('sanciones?success=La sanción se eliminó correctamente.');
+    }
+
     public function activar(string $id): void
     {
         Auth::requireAuth(['bibliotecario']);

@@ -35,7 +35,7 @@
                             <td class="fw-semibold"><?= htmlspecialchars($categoria['nombre']) ?></td>
                             <td class="text-secondary"><?= htmlspecialchars($categoria['descripcion'] ?? 'Sin descripcion') ?></td>
                             <td class="text-end">
-                                <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                <div class="book-actions d-inline-flex flex-wrap justify-content-end gap-2">
                                     
                                 <a class="btn btn-sm btn-outline-primary action-icon-btn" href="<?= htmlspecialchars(url('categorias/actualizar/' . $categoria['id'])) ?>" title="Editar categoria">
                                                 <i class="bi bi-pencil-square"></i>

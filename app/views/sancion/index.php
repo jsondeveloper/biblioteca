@@ -45,10 +45,19 @@
                                     <?= $sancion['activa'] ? 'Activa' : 'Inactiva' ?>
                                 </span>
                             </td>
-                            <td class="text-end">
-                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editarSancionModal<?= $sancion['id'] ?>">
-                                    Editar
-                                </button>
+                            <td class="text-end book-actions">
+                                <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                    <button type="button" class="btn btn-sm btn-outline-primary action-icon-btn" title="Editar sancion" data-bs-toggle="modal" data-bs-target="#editarSancionModal<?= $sancion['id'] ?>">
+                                        <i class="bi bi-pencil-square"></i>
+                                        <span class="visually-hidden">Editar</span>
+                                    </button>
+                                    <form method="post" action="<?= htmlspecialchars(url('sanciones/eliminar/' . $sancion['id'])) ?>" class="d-inline-block">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger action-icon-btn" title="Eliminar sancion" onclick="return confirm('Se eliminara esta sancion. Deseas continuar?')">
+                                            <i class="bi bi-trash3"></i>
+                                            <span class="visually-hidden">Eliminar</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

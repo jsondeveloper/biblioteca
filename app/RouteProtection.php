@@ -40,6 +40,7 @@ class RouteProtection
             'index' => ['bibliotecario'],
             'crear' => ['bibliotecario'],
             'actualizar' => ['bibliotecario'],
+            'eliminar' => ['bibliotecario'],
             'activar' => ['bibliotecario'],
             'desactivar' => ['bibliotecario'],
         ],

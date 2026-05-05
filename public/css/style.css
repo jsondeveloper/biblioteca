@@ -11,9 +11,16 @@
     --surface-strong: #ffffff;
     --shadow-soft: 0 18px 50px rgba(22, 50, 79, 0.10);
     --shadow-card: 0 12px 35px rgba(24, 48, 66, 0.10);
+    --shadow-button: 0 8px 18px rgba(24, 48, 66, 0.11);
     --radius-xl: 28px;
     --radius-lg: 22px;
     --radius-md: 16px;
+    --action-primary: #2c6683;
+    --action-success: #2f7d73;
+    --action-danger: #b34040;
+    --action-warning: #c58d23;
+    --action-secondary: #5d7080;
+    --action-dark: #243242;
 }
 
 body {
@@ -223,49 +230,16 @@ h1, h2, h3, h4, h5, h6,
     height: 36px;
     min-height: 36px;
     padding: 0;
-    border: 1px solid rgba(22, 50, 79, 0.10);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.82);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.72);
     color: var(--text-soft);
     box-shadow: none;
-    transition: transform 0.16s ease, background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
 }
 
 .book-actions .action-icon-btn:hover,
 .book-actions .action-icon-btn:focus {
     transform: translateY(-1px);
-    background: #ffffff;
-    border-color: rgba(22, 50, 79, 0.18);
-    color: var(--text-strong);
-}
-
-.book-actions .btn-outline-success { color: #2f7d73; }
-.book-actions .btn-outline-primary { color: #2c6683; }
-.book-actions .btn-outline-secondary { color: #536677; }
-.book-actions .btn-outline-danger { color: #9d2f2f; }
-
-.book-actions .btn-outline-success:hover,
-.book-actions .btn-outline-success:focus {
-    background: rgba(47, 125, 115, 0.10);
-    color: #1d665c;
-}
-
-.book-actions .btn-outline-primary:hover,
-.book-actions .btn-outline-primary:focus {
-    background: rgba(66, 133, 168, 0.12);
-    color: #235f7c;
-}
-
-.book-actions .btn-outline-secondary:hover,
-.book-actions .btn-outline-secondary:focus {
-    background: rgba(110, 128, 141, 0.12);
-    color: #415463;
-}
-
-.book-actions .btn-outline-danger:hover,
-.book-actions .btn-outline-danger:focus {
-    background: rgba(190, 74, 74, 0.10);
-    color: #8f2929;
+    box-shadow: 0 8px 18px rgba(24, 48, 66, 0.10);
 }
 
 .app-navbar-toggler {
@@ -424,39 +398,163 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .btn {
-    font-weight: 300;
-    padding: 0.48rem 1rem;
-    border-width: 0;
-    text-decoration: none;
-    color: #fff;
-    background: rgba(22, 50, 79, 0.97);
+    --btn-bg: var(--brand-navy);
+    --btn-fg: #ffffff;
+    --btn-border: transparent;
+    --btn-hover-bg: #102a43;
+    --btn-hover-fg: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.48rem;
+    min-height: 42px;
+    padding: 0.56rem 1.05rem;
+    border: 1px solid var(--btn-border);
+    border-radius: 999px;
+    background: var(--btn-bg);
+    color: var(--btn-fg) !important;
+    box-shadow: var(--shadow-button);
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: 0;
+    text-decoration: none !important;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.btn:hover,
+.btn:focus {
+    transform: translateY(-1px);
+    background: var(--btn-hover-bg);
+    border-color: var(--btn-border);
+    color: var(--btn-hover-fg) !important;
+    box-shadow: 0 12px 24px rgba(24, 48, 66, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 12px rgba(24, 48, 66, 0.12);
+}
+
+.btn:disabled,
+.btn.disabled {
+    transform: none;
+    box-shadow: none;
+    opacity: 0.62;
+}
+
+.btn-sm {
+    min-height: 34px;
+    padding: 0.38rem 0.78rem;
+    font-size: 0.84rem;
+}
+
+.btn-lg {
+    min-height: 48px;
+    padding: 0.72rem 1.24rem;
     font-size: 1rem;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #215a6d, #2f7d73);
-}
-
-.btn-primary:hover,
-.btn-primary:focus {
-    background: linear-gradient(135deg, #1a4a5a, #276a61);
+    --btn-bg: var(--action-primary);
+    --btn-hover-bg: #245a74;
 }
 
 .btn-success {
-    background: linear-gradient(135deg, #2f7d73, #3fa989);
+    --btn-bg: var(--action-success);
+    --btn-hover-bg: #286d64;
+}
+
+.btn-danger {
+    --btn-bg: var(--action-danger);
+    --btn-hover-bg: #993434;
 }
 
 .btn-warning {
-    color: #183042;
-    background: linear-gradient(135deg, #efc874, #d9a843);
+    --btn-bg: #e4b44f;
+    --btn-fg: #183042;
+    --btn-hover-bg: #d8a23d;
+    --btn-hover-fg: #183042;
+}
+
+.btn-secondary {
+    --btn-bg: var(--action-secondary);
+    --btn-hover-bg: #4d6070;
+}
+
+.btn-dark {
+    --btn-bg: var(--action-dark);
+    --btn-hover-bg: #182534;
 }
 
 .btn-outline-primary,
 .btn-outline-secondary,
 .btn-outline-danger,
 .btn-outline-success,
+.btn-outline-dark,
+.btn-outline-warning,
+.btn-outline-light {
+    box-shadow: none;
+}
+
+.btn-outline-primary {
+    --btn-bg: rgba(44, 102, 131, 0.08);
+    --btn-fg: var(--action-primary);
+    --btn-border: rgba(44, 102, 131, 0.22);
+    --btn-hover-bg: rgba(44, 102, 131, 0.14);
+    --btn-hover-fg: #245a74;
+}
+
+.btn-outline-success {
+    --btn-bg: rgba(47, 125, 115, 0.09);
+    --btn-fg: var(--action-success);
+    --btn-border: rgba(47, 125, 115, 0.24);
+    --btn-hover-bg: rgba(47, 125, 115, 0.15);
+    --btn-hover-fg: #24695f;
+}
+
+.btn-outline-danger {
+    --btn-bg: rgba(179, 64, 64, 0.08);
+    --btn-fg: var(--action-danger);
+    --btn-border: rgba(179, 64, 64, 0.24);
+    --btn-hover-bg: rgba(179, 64, 64, 0.14);
+    --btn-hover-fg: #963232;
+}
+
+.btn-outline-secondary {
+    --btn-bg: rgba(93, 112, 128, 0.08);
+    --btn-fg: var(--action-secondary);
+    --btn-border: rgba(93, 112, 128, 0.22);
+    --btn-hover-bg: rgba(93, 112, 128, 0.14);
+    --btn-hover-fg: #465967;
+}
+
 .btn-outline-dark {
-    border-width: 1px;
+    --btn-bg: rgba(36, 50, 66, 0.08);
+    --btn-fg: var(--action-dark);
+    --btn-border: rgba(36, 50, 66, 0.22);
+    --btn-hover-bg: rgba(36, 50, 66, 0.14);
+    --btn-hover-fg: #182534;
+}
+
+.btn-outline-warning {
+    --btn-bg: rgba(197, 141, 35, 0.10);
+    --btn-fg: #9d6b13;
+    --btn-border: rgba(197, 141, 35, 0.26);
+    --btn-hover-bg: rgba(197, 141, 35, 0.17);
+    --btn-hover-fg: #7d520b;
+}
+
+.btn-outline-light {
+    --btn-bg: rgba(255, 255, 255, 0.10);
+    --btn-fg: #ffffff;
+    --btn-border: rgba(255, 255, 255, 0.30);
+    --btn-hover-bg: rgba(255, 255, 255, 0.18);
+    --btn-hover-fg: #ffffff;
+}
+
+.book-actions .btn {
+    box-shadow: none;
 }
 
 .badge {

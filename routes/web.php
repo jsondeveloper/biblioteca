@@ -44,6 +44,7 @@ $router->get('/sanciones', [SancionController::class, 'index']);
 $router->get('/sanciones/crear', [SancionController::class, 'crear']);
 $router->post('/sanciones/crear', [SancionController::class, 'crear']);
 $router->post('/sanciones/actualizar/{id}', [SancionController::class, 'actualizar']);
+$router->post('/sanciones/eliminar/{id}', [SancionController::class, 'eliminar']);
 $router->post('/sanciones/activar/{id}', [SancionController::class, 'activar']);
 $router->post('/sanciones/desactivar/{id}', [SancionController::class, 'desactivar']);
 
