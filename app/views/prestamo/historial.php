@@ -13,12 +13,6 @@
     </div>
 </section>
 
-<?php if (isset($mensaje) && !empty($mensaje)): ?>
-    <div class="alert alert-<?= htmlspecialchars($tipo === 'success' ? 'success' : 'danger') ?> border-0 shadow-sm mb-4">
-        <?= htmlspecialchars($mensaje) ?>
-    </div>
-<?php endif; ?>
-
 <!-- Prestamos Activos -->
 <section class="mb-5">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">

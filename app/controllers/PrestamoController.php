@@ -115,17 +115,6 @@ class PrestamoController extends BaseController
         // Cancelar reservas expiradas automáticamente
         Reserva::cancelExpiredReservations();
 
-        $mensaje = null;
-        $tipo = null;
-
-        if (isset($_GET['success'])) {
-            $mensaje = 'Operacion completada exitosamente.';
-            $tipo = 'success';
-        } elseif (isset($_GET['error'])) {
-            $mensaje = (string) $_GET['error'];
-            $tipo = 'error';
-        }
-
         $isBibliotecario = Auth::hasRole('bibliotecario');
 
         if ($isBibliotecario) {
@@ -150,8 +139,6 @@ class PrestamoController extends BaseController
             'title' => 'Prestamos y historial',
             'prestamosActivos' => $prestamosActivos,
             'historial' => $historial,
-            'mensaje' => $mensaje,
-            'tipo' => $tipo,
             'isBibliotecario' => $isBibliotecario,
         ]);
     }

@@ -18,12 +18,12 @@
 
 <section class="table-card p-4 mb-4">
     <div class="book-search">
-        <label class="form-label" for="bookSearch">Buscar por titulo, autor, ISBN, estado o anio</label>
+        <label class="form-label" for="bookSearch">Buscar por titulo, autor, ISBN, estado o año</label>
         <input
             type="search"
             id="bookSearch"
             class="form-control form-control-lg"
-            placeholder="Ej. Cien anios de soledad o 978-1234567890"
+            placeholder="Ejemplo: Cien años de soledad o 978-1234567890"
             autocomplete="off"
         >
     </div>
